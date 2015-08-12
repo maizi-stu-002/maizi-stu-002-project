@@ -18,4 +18,9 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^', include('maiziedu.home_urls')),
+    url(r'^', include('maiziedu.user_urls')),
+    url(r'^', include('maiziedu.course_urls')),
+    url(r'^', include('maiziedu.student_urls')),
+    url(r'^', include('maiziedu.teacher_urls'))
 ]
