@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+ {% block courseList %}
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href={% url "index" %}>首页</a></li>
+      <li class="active">麦子课程</li>
+    </ol>
+  </div>
+  <div class="container container-course-list">
+    <ul class="row course-list">
+      <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <section style="background-color:#A9BE32;">
+          <a href="">
+            <img src={% static "images/course/android.png"%}>
+            <article>
+              <h3>Android应用开发工程师</h3>
+              <p>23658位学员正在学习</p>
+            </article>
+          </a>
+        </section>
+      </li>
+      <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <section style="background-color:#E68E38;">
+          <a href="">
+            <img src={% static "images/course/ios.png"%}>
+            <article>
+              <h3>iOS开发工程师</h3>
+              <p>23658位学员正在学习</p>
+            </article>
+          </a>
+        </section>
+      </li>
+      <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <section style="background-color:#429FDA;">
+          <a href="">
+            <img src={% static "images/course/drupal.png"%}>
+            <article>
+              <h3>Drupal网站开发工程师</h3>
+              <p>23658位学员正在学习</p>
+            </article>
+          </a>
+        </section>
+      </li>
+      <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <section style="background-color:#D3A21F;">
+          <a href="">
+            <img src={% static "images/course/cocos.png"%}>
+            <article>
+              <h3>Cocos2D-X手机游戏 开发工程师</h3>
+              <p>23658位学员正在学习</p>
+            </article>
+          </a>
+        </section>
+      </li>
+      <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <section style="background-color:#EE5C5C;">
+          <a href="">
+            <img src={% static "images/course/windows8.png"%}>
+            <article>
+              <h3>WindowsPhone应用 开发工程师</h3>
+              <p>23658位学员正在学习</p>
+            </article>
+          </a>
+        </section>
+      </li>
+      <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <section style="background-color:#35AC56;">
+          <a href="">
+            <img src={% static "images/course/android.png"%}>
+            <article>
+              <h3>Android底层嵌入式工 程师</h3>
+              <p>23658位学员正在学习</p>
+            </article>
+          </a>
+        </section>
+      </li>
+      <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <section style="background-color:#5184CF;">
+          <a href="">
+            <img src={% static "images/course/android.png"%}>
+            <article>
+              <h3>Android架构设计师</h3>
+              <p>23658位学员正在学习</p>
+            </article>
+          </a>
+        </section>
+      </li>
+    </ul>
+    <div class="page-bg-g">
+      <div class="row v5-pages">
+        <div class="col-sm-12 v5-pages-list">
+          <ul class="row fr">
+            <li><a href=
+            {% ifequal coursePage.number 1 %} 
+              {{ deadlink }}
+            {% else %}
+              "?page=" {{ coursePage.previous_page_number}}
+            {% endifequal %}
+             class="v5-icon v5-icon-prev"></a></li>
+             {% for course in coursePage  %}
+               
+            <li><a href="?page="{{ coursePage.number }} class={% ifequal coursePage.number request.GET.page %}
+            "page-num active" {% endifequal %}>1</a>
+        
+            </li>
+             {% endfor %}
+
+            <li><a href=
+            {% ifequal coursePage.number coursePage.num_pages %}
+              {{ deadlink }}
+            {% else %}
+              "?page=" {{ coursePage.next_page_nubmer}}
+            {% endifequal %}
+             class="v5-icon v5-icon-next"></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+   
+ {% endblock courseList %}
