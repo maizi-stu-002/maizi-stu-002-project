@@ -88,6 +88,7 @@ DATABASES = {
         'PASSWORD': 'password',
         'HOST': '',
         'PORT': '',
+        'CHARSET': 'utf-8'
     }
 }
 
@@ -95,15 +96,15 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-CN'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -115,10 +116,12 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-# uploads images
+# 上传文件位置
 MEDIA_URL = '/uploads/'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+
+# 自定义用户类型
+AUTH_USER_MODEL = 'maiziedu.UserProfile'
 
 # 自定义日志输出信息
 LOGGING = {
