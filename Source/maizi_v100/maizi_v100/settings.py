@@ -60,7 +60,12 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates/home'),
+            os.path.join(BASE_DIR, 'templates/user'),
             os.path.join(BASE_DIR, 'templates/course'),
+            os.path.join(BASE_DIR, 'templates/student'),
+            os.path.join(BASE_DIR, 'templates/teacher'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -96,11 +101,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-<<<<<<< HEAD
 LANGUAGE_CODE = 'zh-CN'
-=======
-LANGUAGE_CODE = 'zh-hans'
->>>>>>> ae66e77a37c4135d66354763ca78e3e09a63f596
 
 TIME_ZONE = 'Asia/Shanghai'
 
