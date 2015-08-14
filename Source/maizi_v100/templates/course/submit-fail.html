@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-<title>课程播放-在线测试</title>
+<title>课程播放</title>
 <link href="css/base.css" rel="stylesheet">
 <link href="css/microoh-v5.css" rel="stylesheet">
 <link href="css/animate.css" rel="stylesheet">
@@ -105,7 +105,7 @@
         <dd>课程描述：在开始学习Android底层嵌入式前要了解的一些概念。</dd>
       </dl>
       <div class="course-play-container">
-        <div class="row popover-test-container">
+        <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 course-play-box">
             <img src="test/11.jpg">
           </div>
@@ -155,14 +155,14 @@
         <div class="row course-play-info">
           <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 aside-l">
           	<ul class="course-play-tabs" role="tablist">
-              <li class="active"><a href="#comm" role="tab" data-toggle="tab">学习交流</a></li>
-              <li><a href="#exercise" role="tab" data-toggle="tab">在线练习</a></li>
+              <li><a href="#comm" role="tab" data-toggle="tab">学习交流</a></li>
+              <li class="active"><a href="#exercise" role="tab" data-toggle="tab">在线练习</a></li>
               <li><a href="#submit" role="tab" data-toggle="tab">作业提交</a></li>
               <li><a href="#download" role="tab" data-toggle="tab">课件下载</a></li>
             </ul>
             <div class="tab-content">
-              <div class="tab-pane active" id="comm">
-              	<div class="media">
+              <div class="tab-pane" id="comm">
+                <div class="media">
                   <a class="pull-left" href="#">
                     <img class="media-object" src="test/12.jpg">
                   </a>
@@ -171,12 +171,9 @@
                       <span class="user-name">kaily_zhou@126.com</span>
                     </h4>
                     <div class="comment-input">
-                    	<textarea class="form-control" rows="3" placeholder="我要评论" disabled></textarea>
-                      <div class="not-logged">
-                      	<p>请先<a href="#" data-toggle="modal" data-target="#loginModal">登录</a>或<a href="" data-toggle="modal" data-target="#registerModal">注册</a></p>
-                      </div>
+                      <textarea class="form-control" rows="3" placeholder="我要评论"></textarea>
                       <div class="btnbox">
-                        <button type="button" class="btn btn-micv5 btn-lg-fts btn-micv5-disabled" disabled>发布评论</button>
+                        <button type="button" class="btn btn-micv5 btn-lg-fts">发布评论</button>
                       </div>
                     </div>
                   </div>
@@ -188,8 +185,8 @@
                     </a>
                     <div class="media-body">
                       <h4 class="media-heading">
-                      	<a href="" class="reply">回复10</a>
-                      	<span class="user-name">kaily_zhou@126.com</span>
+                        <a href="" class="reply">回复10</a>
+                        <span class="user-name">kaily_zhou@126.com</span>
                         <span class="time">4小时前</span>
                       </h4>
                       <p>这课程真棒！</p>
@@ -203,12 +200,9 @@
                             <span class="grade">老师</span>
                           </h4>
                           <div class="comment-input">
-                            <textarea class="form-control" rows="3" placeholder="我要评论" disabled></textarea>
-                            <div class="not-logged">
-                              <p>请先<a href="#" data-toggle="modal" data-target="#loginModal">登录</a>或<a href="" data-toggle="modal" data-target="#registerModal">注册</a></p>
-                            </div>
+                            <textarea class="form-control" rows="3" placeholder="我要评论"></textarea>
                             <div class="btnbox">
-                              <button type="button" class="btn btn-micv5 btn-lg-fts btn-micv5-disabled" disabled>回复</button>
+                              <button type="button" class="btn btn-micv5 btn-lg-fts">回复</button>
                             </div>
                           </div>
                         </div>
@@ -223,8 +217,8 @@
                     </a>
                     <div class="media-body">
                       <h4 class="media-heading">
-                      	<a href="" class="reply">回复10</a>
-                      	<span class="user-name">kaily_zhou@126.com</span>
+                        <a href="" class="reply">回复10</a>
+                        <span class="user-name">kaily_zhou@126.com</span>
                         <span class="time">4小时前</span>
                       </h4>
                       <p>这课程真棒！</p>
@@ -234,7 +228,7 @@
                         </a>
                         <div class="media-body">
                           <h4 class="media-heading">
-                          	<a href="" class="reply">回复10</a>
+                            <a href="" class="reply">回复10</a>
                             <span class="user-name">kaily_zhou@126.com</span>
                             <span class="grade">老师</span>
                             <span class="time">4小时前</span>
@@ -252,8 +246,8 @@
                     </a>
                     <div class="media-body">
                       <h4 class="media-heading">
-                      	<a href="" class="reply">回复10</a>
-                      	<span class="user-name">kaily_zhou@126.com</span>
+                        <a href="" class="reply">回复10</a>
+                        <span class="user-name">kaily_zhou@126.com</span>
                         <span class="time">4小时前</span>
                       </h4>
                       <p>这课程真棒！</p>
@@ -263,7 +257,7 @@
                         </a>
                         <div class="media-body">
                           <h4 class="media-heading">
-                          	<a href="" class="reply">回复10</a>
+                            <a href="" class="reply">回复10</a>
                             <span class="user-name">kaily_zhou@126.com</span>
                             <span class="grade">老师</span>
                             <span class="time">4小时前</span>
@@ -275,9 +269,9 @@
                   </li>
                 </ul>
               </div>
-              <div class="tab-pane" id="exercise">
-              	<div class="row exercise-table">
-                  <div class="col-sm-4">
+              <div class="tab-pane active" id="exercise">
+                <div class="row exercise-table">
+                	<div class="col-sm-4">
                    <div class="knowledge-point">
                      <h1>知识点</h1>
                      <p>echo是PHP中的输出语句，可以把字符串输出（字符串用双引号括起来）。</p>
@@ -311,6 +305,16 @@
                         </pre>                     
                       </div>
                       <div class="runcode"><button class="btn btn-micv5 btn-lg-fts">提交</button></div>
+                      <div class="v5-modal">
+                        <div class="v5-modal-body">
+                          <div class="v5-modal-col">
+                            <div class="v5-tips v5-has-wrong">
+                              <i class="v5-icon v5-icon-wrong"></i>
+                              <span>提交失败</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div class="run-results">
                       <h1>运行结果</h1>
@@ -328,7 +332,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div>  
               </div>
               <div class="tab-pane" id="submit">
                 <h1>需求描述</h1>
@@ -460,7 +464,7 @@
 </div>
 
 <!--二维码-->
-<div class="ewm" id="ewm">
+<div class="ewm">
   <p>APP可离线下载该课程</p>
   <img src="test/14.png">
   <p>扫描二维码下载APP</p>
@@ -550,93 +554,6 @@
   </div>
 </div>
 
-<!--在线测试-->
-<div class="modal fade" id="onlinetestModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-body">
-        <div class="box-onlinetest">
-        	<article>
-        	  <div class="onlinetest-wp cf">
-        	    <section>
-        	      <h1 class="ft20 text-center">在线测试</h1>
-                <p>有以下程序段: int s=0,a=1,n; scanf("%d",&n);do {  s+=1;a=a-2; }  while(a!=n);printf("%d\n",s);若要使程序的输出值为2，则应该从键盘给n输入的值是(      )</p>
-                <button>A：1</button>
-                <button>B：2</button>
-                <button>C：3</button>
-                <button>D：4</button>
-                <span>1/5</span>
-              </section>
-              <section>
-                <h1 class="ft20 text-center">在线测试</h1>
-                <p>有以下程序段: int s=0,a=1,n; scanf("%d",&n);do {  s+=1;a=a-2; }  while(a!=n);printf("%d\n",s);若要使程序的输出值为2，则应该从键盘给n输入的值是(      )</p>
-                <button>A：1</button>
-                <button>B：2</button>
-                <button>C：3</button>
-                <button>D：4</button>
-                <span>2/5</span>
-              </section>
-              <section>
-                <h1 class="ft20 text-center">在线测试</h1>
-                <p>有以下程序段: int s=0,a=1,n; scanf("%d",&n);do {  s+=1;a=a-2; }  while(a!=n);printf("%d\n",s);若要使程序的输出值为2，则应该从键盘给n输入的值是(      )</p>
-                <button>A：1</button>
-                <button>B：2</button>
-                <button>C：3</button>
-                <button>D：4</button>
-                <span>3/5</span>
-              </section>
-              <section>
-                <h1 class="ft20 text-center">在线测试</h1>
-                <p>有以下程序段: int s=0,a=1,n; scanf("%d",&n);do {  s+=1;a=a-2; }  while(a!=n);printf("%d\n",s);若要使程序的输出值为2，则应该从键盘给n输入的值是(      )</p>
-                <button>A：1</button>
-                <button>B：2</button>
-                <button>C：3</button>
-                <button>D：4</button>
-                <span>4/5</span>
-              </section>
-              <section>
-                <h1 class="ft20 text-center">在线测试</h1>
-                <p>有以下程序段: int s=0,a=1,n; scanf("%d",&n);do {  s+=1;a=a-2; }  while(a!=n);printf("%d\n",s);若要使程序的输出值为2，则应该从键盘给n输入的值是(      )</p>
-                <button>A：1</button>
-                <button>B：2</button>
-                <button>C：3</button>
-                <button>D：4</button>
-                <span>5/5</span>
-              </section>
-              <section>
-                <h1 class="ft20 text-center">测试结果</h1>
-                <ul class="row">
-                  <li class="col-sm-6">答对题数：</li>
-                  <li class="col-sm-6 text-center text-v5"><h2>3</h2></li>
-                </ul>
-                <ul class="row">
-                  <li class="col-sm-6">答错题数：</li>
-                  <li class="col-sm-6 text-center text-red"><h2>2</h2></li>
-                </ul>
-                <ul class="row">
-                  <li class="col-sm-6">正确率：</li>
-                  <li class="col-sm-6 text-center text-v5"><h2>60%</h2></li>
-                </ul>
-                <ul class="row">
-                  <li class="col-sm-6">获得学力：</li>
-                  <li class="col-sm-6 text-center text-v5"><h2>1</h2></li>
-                </ul>
-                <input type="button" class="btn btn-micv5 btn-v5-md btn-block closetest" value="结束测试" />
-              </section>
-        	  </div>        	   
-        	</article>
-        </div>        
-      </div>
-    </div>
-  </div>
-</div>
-
-<!--在线测试提示-->
-<div class="popover-test" id="popover_test">
-	<span>本章节即将播放结束，赶快自测 一下知识点吧。答对挣学分哦~</span>
-	<a href="" class="start-test">开始测试</a>
-</div>
-
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/jquery-migrate-1.2.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
@@ -648,42 +565,7 @@
 $(function(){
 	$('.scroll-pane').jScrollPane({
 			autoReinitialise: true
-	});
-	
-	
-  function onlinetest(){
-    $('#onlinetestModal').modal('show');
-    onlinetst();
-  }
-  
-  
-  //在线测试
-  function onlinetst(){
-    var _section = $('.onlinetest-wp').find('section');
-    var _button = $('.onlinetest-wp').find('button');
-    var _this_section_length = _section.length;
-    var _this_section_width = _section.outerWidth();
-    $('.onlinetest-wp').width(_this_section_width*_this_section_length);
-    _button.click(function(){
-      $(this).addClass('active').siblings().removeClass('active');
-      $(this).parents('.onlinetest-wp').animate({marginLeft:'-='+_this_section_width},500);
-    });
-    $('.closetest').click(function(){
-      $('#onlinetestModal').modal('hide');
-    })
-  }
-  
-  //在线测试提示
-  v5_popover_tpl('v5-popover-test','popover_test','popover-test-container','bottom','manual');
-  $('.popover-test-container').popover('show');
-  $('.start-test').click(function(event){
-    event.preventDefault();
-    $('.popover-test-container').popover('hide');
-    onlinetest();
-  }) 
-  
-  v5_popover_tpl('v5-popover-ewm','ewm','downloadv','bottom','hover');
-  
+		});
 });
 </script>
 </body>
