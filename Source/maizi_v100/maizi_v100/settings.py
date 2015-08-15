@@ -60,7 +60,12 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates/home'),
+            os.path.join(BASE_DIR, 'templates/user'),
             os.path.join(BASE_DIR, 'templates/course'),
+            os.path.join(BASE_DIR, 'templates/student'),
+            os.path.join(BASE_DIR, 'templates/teacher'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -86,9 +91,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'maiziedu',
         'USER': 'root',
-        'PASSWORD': '123123',
+        'PASSWORD': 'password',
         'HOST': '',
         'PORT': '',
+        'CHARSET': 'utf-8'
     }
 }
 
@@ -96,7 +102,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'zh-hans'
+LANGUAGE_CODE = 'zh-CN'
 
 TIME_ZONE = 'Asia/Shanghai'
 
@@ -104,7 +110,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -116,9 +122,12 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+# 上传文件位置
 MEDIA_URL = '/uploads/'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+
+# 自定义用户类型
+AUTH_USER_MODEL = 'maiziedu.UserProfile'
 
 # 自定义日志输出信息
 # LOGGING = {
