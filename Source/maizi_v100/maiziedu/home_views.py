@@ -6,4 +6,4 @@ from django.shortcuts import render
 
 # 首页
 def index(request):
-    return render(request, 'base.html', locals())
+    return render(request, 'home/index.html', locals())
