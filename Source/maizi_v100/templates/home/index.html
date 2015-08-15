@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
@@ -7,14 +8,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-<title>首页</title>
-<link href="css/base.css" rel="stylesheet">
-<link href="css/microoh-v5.css" rel="stylesheet">
-<link href="css/animate.css" rel="stylesheet">
-<link href="css/develop.css" rel="stylesheet">
+{% block title %}<title>首页</title>{% endblock %}
+<link href="{% static 'css/base.css' %}" rel="stylesheet">
+<link href="{% static 'css/microoh-v5.css' %}" rel="stylesheet">
+<link href="{% static 'css/animate.css' %}" rel="stylesheet">
+<link href="{% static 'css/develop.css' %}" rel="stylesheet">
 <!--[if lt IE 9]>
-<script src="js/html5shiv.min.js"></script>
-<script src="js/respond.min.js"></script>
+<script src="{% static 'js/html5shiv.min.js' %}"></script>
+<script src="{% static 'js/respond.min.js' %}"></script>
 <![endif]-->
 </head>
 
@@ -29,7 +30,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="" title="麦子学院"><img src="images/logo.png"><img src="images/logo-font.png"></a>
+        <a class="navbar-brand" href="" title="麦子学院"><img src="{% static 'images/logo.png' %}"><img src="{% static 'images/logo-font.png' %}"></a>
       </div>
       <div class="collapse navbar-collapse" id="microoh-navbar-collapse">
         <ul class="nav navbar-nav navbar-left">
@@ -117,13 +118,13 @@
       <div class="carousel-container">
         <div id="carousel">
           <div class="carousel-feature">
-            <a href="#"><img class="carousel-image" alt="Image Caption" src="test/1.jpg"></a>
+            <a href="#"><img class="carousel-image" alt="Image Caption" src="{% static 'test/1.jpg' %}"></a>
           </div>
           <div class="carousel-feature">
-            <a href="#"><img class="carousel-image" alt="Image Caption" src="test/1.jpg"></a>
+            <a href="#"><img class="carousel-image" alt="Image Caption" src="{% static 'test/1.jpg' %}"></a>
           </div>
           <div class="carousel-feature">
-            <a href="#"><img class="carousel-image" alt="Image Caption" src="test/1.jpg"></a>
+            <a href="#"><img class="carousel-image" alt="Image Caption" src="{% static 'test/1.jpg' %}"></a>
           </div>
         </div>
       </div>
@@ -147,7 +148,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -160,7 +161,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -173,7 +174,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -186,7 +187,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -199,7 +200,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -212,7 +213,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -225,7 +226,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -238,7 +239,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -272,7 +273,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -285,7 +286,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -298,7 +299,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -311,7 +312,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -324,7 +325,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -337,7 +338,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -350,7 +351,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -363,7 +364,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -397,7 +398,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -410,7 +411,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -423,7 +424,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -436,7 +437,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -449,7 +450,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -462,7 +463,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -475,7 +476,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -488,7 +489,7 @@
                     <a href="">
                       <dl>
                         <dt>
-                          <div><img src="test/17.jpg"></div>
+                          <div><img src="{% static 'test/17.jpg' %}"></div>
                         </dt>
                         <dd>
                           <span>IO8 APP开发快速入门</span>
@@ -531,7 +532,7 @@
           <ul id="foo" class="cf">
             <li>
               <dl>
-                <dt><a href="" style="border-left-color:#00A388;"><img src="test/2.png"></a></dt>
+                <dt><a href="" style="border-left-color:#00A388;"><img src="{% static 'test/2.jpg' %}"></a></dt>
                 <dd>
                   <h2>杨丰盛</h2>
                   <h3>安卓框架联盟总架构师</h3>
@@ -540,7 +541,7 @@
             </li>
             <li>
               <dl>
-                <dt><a href="" style="border-left-color:#FF6038;"><img src="test/17.jpg"></a></dt>
+                <dt><a href="" style="border-left-color:#FF6038;"><img src="t{% static 'test/17.jpg' %}"></a></dt>
                 <dd>
                   <h2>杨丰盛</h2>
                   <h3>安卓框架联盟总架构师</h3>
@@ -549,7 +550,7 @@
             </li>
             <li>
               <dl>
-                <dt><a href="" style="border-left-color:#00A388;"><img src="test/2.png"></a></dt>
+                <dt><a href="" style="border-left-color:#00A388;"><img src="{% static 'test/2.jpg' %}"></a></dt>
                 <dd>
                   <h2>杨丰盛</h2>
                   <h3>安卓框架联盟总架构师</h3>
@@ -558,7 +559,7 @@
             </li>
             <li>
               <dl>
-                <dt><a href="" style="border-left-color:#78BD8B;"><img src="test/2.png"></a></dt>
+                <dt><a href="" style="border-left-color:#78BD8B;"><img src="{% static 'test/2.jpg' %}"></a></dt>
                 <dd>
                   <h2>杨丰盛</h2>
                   <h3>安卓框架联盟总架构师</h3>
@@ -588,10 +589,10 @@
               <li><a href="" title="第一次！首批 Android app 上架 Chrome ">第一次！首批 Android app 上架 Chrome</a></li>
             </ul>
           </div>
-          <p><img src="test/3.jpg"></p>
+          <p><img src="{% static 'test/3.jpg' %}"></p>
         </div>
         <div class="v5-read-item v5-read-item-mid">
-          <p><img src="test/4.jpg"></p>
+          <p><img src="{% static 'test/4.jpg' %}"></p>
           <div class="v5-read-list" style="background-color:#FF6138;">
             <h1>麦子百科</h1>
             <ul>
@@ -614,7 +615,7 @@
               <li><a href="" title="第一次！首批 Android app 上架 Chrome ">第一次！首批 Android app 上架 Chrome</a></li>
             </ul>
           </div>
-          <p><img src="test/5.jpg"></p>
+          <p><img src="{% static 'test/5.jpg' %}"></p>
         </div>
       </div>
     </div>
@@ -627,16 +628,16 @@
       <div class="v5-strategic">
         <ul class="cf">
           <li>
-            <a href=""><img src="test/6.png"></a>
+            <a href=""><img src="{% static 'test/6.jpg' %}"></a>
           </li>
           <li>
-            <a href=""><img src="test/7.png"></a>
+            <a href=""><img src="{% static 'test/7.jpg' %}"></a>
           </li>
           <li>
-            <a href=""><img src="test/9.png"></a>
+            <a href=""><img src="{% static 'test/9.jpg' %}"></a>
           </li>
           <li>
-            <a href=""><img src="test/10.png"></a>
+            <a href=""><img src="{% static 'test/10.jpg' %}"></a>
           </li>
         </ul>
       </div>
@@ -780,13 +781,13 @@
             <div class="tab-pane active" id="register-email">
             	<div class="form-group"><input type="text" class="form-control" placeholder="请输入邮箱账号"></div>
               <div class="form-group"><input type="password" class="form-control" placeholder="请输入密码"></div>
-              <div class="form-group cf"><input type="text" class="form-control form-control-captcha fl" placeholder="请输入验证码"><span class="v5-yzm fr"><a href=""><img src="test/yzm.jpg">换一张</a></span></div>            	
+              <div class="form-group cf"><input type="text" class="form-control form-control-captcha fl" placeholder="请输入验证码"><span class="v5-yzm fr"><a href=""><img src="{% static 'test/yzm.jpg' %}">换一张</a></span></div>
             </div>
             <div class="tab-pane" id="register-mobile">
             	<div class="form-group cf"><input type="text" class="form-control form-control-phone fl" placeholder="请输入手机号"><span class="fr"><button type="button" class="btn btn-micv5 btn-send">发送验证码</button></span></div>
               <div class="form-group"><input type="text" class="form-control" placeholder="请输入短信验证码"></div>
               <div class="form-group"><input type="password" class="form-control" placeholder="请输入密码"></div>
-              <div class="form-group cf"><input type="text" class="form-control form-control-captcha fl" placeholder="请输入验证码"><span class="v5-yzm fr"><a href=""><img src="test/yzm.jpg">换一张</a></span></div>
+              <div class="form-group cf"><input type="text" class="form-control form-control-captcha fl" placeholder="请输入验证码"><span class="v5-yzm fr"><a href=""><img src="{% static 'test/yzm.jpg' %}">换一张</a></span></div>
             </div>
           </div>
           <p class="good-tips">已经有账号？<a href="#" data-toggle="modal" data-target="#loginModal" id="btnLogin">立即登录</a></p>
@@ -804,7 +805,7 @@
 <div class="show-card animated hidden">
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
-      <td class="td-userhd"><span class="user-pic"><img src="test/15.jpg"></span></td>
+      <td class="td-userhd"><span class="user-pic"><img src="{% static 'test/15.jpg' %}"></span></td>
       <td align="right" class="text-align-r">
         <a href="" class="link-default">184545848</a>
         <div class="user-email">184545848@mail.com</div>
@@ -836,16 +837,16 @@
 
 
 
-<script src="js/jquery-1.11.1.min.js"></script>
-<script src="js/jquery-migrate-1.2.1.min.js"></script>
-<script src="js/jquery.featureCarousel.min.js"></script>
-<script src="js/jquery.carouFredSel.js"></script>
-<script src="js/jquery.mousewheel.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jPages.min.js"></script>
-<script src="js/jquery.jscrollpane.min.js"></script>
-<script src="js/microoh-v5.js"></script>
-<script src="js/ie10-viewport-bug-workaround.js"></script>
+<script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'js/jquery-migrate-1.2.1.min.js' %}"></script>
+<script src="{% static 'js/jquery.featureCarousel.min.js' %}"></script>
+<script src="{% static 'js/jquery.carouFredSel.js' %}"></script>
+<script src="{% static 'js/jquery.mousewheel.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jPages.min.js' %}"></script>
+<script src="{% static 'js/jquery.jscrollpane.min.js' %}"></script>
+<script src="{% static 'js/microoh-v5.js' %}"></script>
+<script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
 <script type="text/javascript">
 $(function() {
 	//大图切换
