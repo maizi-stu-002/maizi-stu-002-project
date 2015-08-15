@@ -34,4 +34,6 @@ admin.site.register(LessonResource)  # 课程资源
 admin.site.register(Discuss)  # 课程讨论
 admin.site.register(UserLearnLesson)  # 用户学习课时
 admin.site.register(UserFavoriteCourse)  # 用户收藏
+admin.site.register(Strategic)  # 战略合作
+admin.site.register(Links)  # 友情链接
 admin.site.register(Ad)  # 广告

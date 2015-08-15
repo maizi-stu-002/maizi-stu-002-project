@@ -139,14 +139,14 @@ class MyCourse(models.Model):
         return '%s, %s, %s' % (self.course_type, self.course_id, self.date_learning)
 
 
-# 博客评论
+# 论坛评论
 class BlogComment(models.Model):
     content = models.TextField(u'评论内容')
     is_subject = models.BooleanField(u'是否是主评论')
     date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
 
     class Meta:
-        verbose_name = u'博客评论'
+        verbose_name = u'论坛评论'
         verbose_name_plural = verbose_name
         ordering = ['-date_publish']
 
@@ -154,19 +154,19 @@ class BlogComment(models.Model):
         return '%s, %s' % (self.content, self.date_publish)
 
 
-# 博客分类
+# 论坛分类
 class BlogCategoryDict(models.Model):
     name = models.CharField(u'分类名称', max_length=200)
 
     class Meta:
-        verbose_name = u'博客分类'
+        verbose_name = u'论坛分类'
         verbose_name_plural = verbose_name
 
     def __unicode__(self):
         return self.name
 
 
-# 博客
+# 论坛
 class Blog(models.Model):
     title = models.CharField(u'标题', max_length=200)
     date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
@@ -176,7 +176,7 @@ class Blog(models.Model):
     category = models.ManyToManyField(BlogCategoryDict, blank=True, verbose_name=u'分类')
 
     class Meta:
-        verbose_name = u'博客'
+        verbose_name = u'论坛'
         verbose_name_plural = verbose_name
         ordering = ['-date_publish']
 
@@ -184,13 +184,13 @@ class Blog(models.Model):
         return '%s, %s' % (self.title, self.date_publish)
 
 
-# 博客关键字
+# 论坛关键字
 class Keywords(models.Model):
     name = models.CharField(u'关键字', max_length=50, blank=True)
-    blog = models.ManyToManyField(Blog, verbose_name=u'博客', blank=True)
+    blog = models.ManyToManyField(Blog, verbose_name=u'所属论坛', blank=True)
 
     class Meta:
-        verbose_name = u'博客关键字'
+        verbose_name = u'论坛关键字'
         verbose_name_plural = verbose_name
 
     def __unicode__(self):
@@ -301,7 +301,7 @@ class CareerCourse(models.Model):
 class Stage(models.Model):
     name = models.CharField(u'阶段名称', max_length=50)
     description = models.CharField(u'描述', max_length=200)
-    index = models.IntegerField(u'序号', null=True, blank=True)
+    index = models.IntegerField(u'排序(从小到大)', default=999)
     career_course = models.ForeignKey(CareerCourse, verbose_name=u'所属职业课程')
 
     class Meta:
@@ -319,7 +319,7 @@ class Course(models.Model):
     is_active = models.BooleanField(u'状态', default=True)
     date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
     need_days = models.IntegerField(u'完成需要天数', null=True, blank=True)
-    index = models.IntegerField(u'序号', null=True, blank=True)
+    index = models.IntegerField(u'排序(从小到大)', default=999)
     stage = models.ForeignKey(Stage, verbose_name=u'所属阶段')
     planning_item = models.ForeignKey(PlanningItem, verbose_name=u'课程计划')
     teacher = models.ForeignKey(Teacher, verbose_name=u'任课教师')
@@ -339,7 +339,7 @@ class Lesson(models.Model):
     video_url = models.CharField(u'视频地址', max_length=200)
     video_length = models.IntegerField(u'视频长度')
     pay_count = models.IntegerField(u'付费计数', null=True, blank=True)
-    index = models.IntegerField(u'序号', null=True, blank=True)
+    index = models.IntegerField(u'排序(从小到大)', default=999)
     course = models.ForeignKey(Course, verbose_name=u'所属课程')
 
     class Meta:
@@ -406,6 +406,41 @@ class UserFavoriteCourse(models.Model):
         return self.course
 
 
+# 战略合作
+class Strategic(models.Model):
+    title = models.CharField(u'标题', max_length=50)
+    image = models.ImageField(u'图片', upload_to='strategic/%Y/%m', max_length=200)
+    description = models.CharField(u'战略连接描述', max_length=200, blank=True)
+    callback_url = models.URLField(u'url地址')
+    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+    index = models.IntegerField(u'排序(从小到大)', default=999)
+
+    class Meta:
+        verbose_name = u'战略合作'
+        verbose_name_plural = verbose_name
+        ordering = ['index', 'id']
+
+    def __unicode__(self):
+        return self.title
+
+
+# 友情链接
+class Links(models.Model):
+    title = models.CharField(u'标题', max_length=50)
+    description = models.CharField(u'友情连接描述', max_length=200, blank=True)
+    callback_url = models.URLField(u'url地址')
+    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+    index = models.IntegerField(u'排序(从小到大)', default=999)
+
+    class Meta:
+        verbose_name = u'友情链接'
+        verbose_name_plural = verbose_name
+        ordering = ['index', 'id']
+
+    def __unicode__(self):
+        return self.title
+
+
 # 广告
 class Ad(models.Model):
     title = models.CharField(u'标题', max_length=50)
@@ -439,46 +474,46 @@ class Setting(models.Model):
         return u'学过的课程用时： %s' % (self.course_days_rule * self.course_days_rule + self.know_course_value)
 
 
-# # 日志
-# class Log(models.Model):
-#     action_type = (
-#         ('1', u'系统消息'),
-#         ('2', u'课程消息回复'),
-#         ('3', u'论坛消息回复'),
-#     )
-#     userA = models.IntegerField(u'用户A')
-#     userB = models.IntegerField(u'用户B', null=True, blank=True)
-#     action_type = models.CharField(u'类型', choices=action_type, max_length=1, blank=True)
-#     action_id = models.IntegerField(u'编号', null=True, blank=True)
-#     date_action = models.DateTimeField(u'日期', auto_now_add=True)
-#
-#     class Meta:
-#         verbose_name = u'日志'
-#         verbose_name_plural = verbose_name
-#         ordering = ['-date_action']
-#
-#     def __unicode__(self):
-#         return self.action_type
-#
-#
-# # 我的消息
-# class MyMessage(models.Model):
-#     action_type = (
-#         ('1', u'系统消息'),
-#         ('2', u'课程消息回复'),
-#         ('3', u'论坛消息回复'),
-#     )
-#     userA = models.IntegerField(u'用户A')
-#     userB = models.IntegerField(u'用户B', null=True, blank=True)
-#     action_type = models.CharField(u'类型', choices=action_type, max_length=1, blank=True)
-#     action_id = models.IntegerField(u'编号', null=True, blank=True)
-#     date_action = models.DateTimeField(u'日期', auto_now_add=True)
-#     is_new = models.BooleanField(u'是否为最新', default=True)
-#
-#     class Meta:
-#         verbose_name = u'我的消息'
-#         verbose_name_plural = verbose_name
-#         ordering = ['is_new']
-#
-#     def __unicode__(self):
-#         return self.action_type
+# 日志
+class Log(models.Model):
+    action_type = (
+        ('1', u'系统消息'),
+        ('2', u'课程消息回复'),
+        ('3', u'论坛消息回复'),
+    )
+    userA = models.IntegerField(u'用户A')
+    userB = models.IntegerField(u'用户B', null=True, blank=True)
+    action_type = models.CharField(u'类型', choices=action_type, max_length=1, blank=True)
+    action_id = models.IntegerField(u'编号', null=True, blank=True)
+    date_action = models.DateTimeField(u'日期', auto_now_add=True)
+
+    class Meta:
+        verbose_name = u'日志'
+        verbose_name_plural = verbose_name
+        ordering = ['-date_action']
+
+    def __unicode__(self):
+        return self.action_type
+
+
+# 我的消息
+class MyMessage(models.Model):
+    action_type = (
+        ('1', u'系统消息'),
+        ('2', u'课程消息回复'),
+        ('3', u'论坛消息回复'),
+    )
+    userA = models.IntegerField(u'用户A')
+    userB = models.IntegerField(u'用户B', null=True, blank=True)
+    action_type = models.CharField(u'类型', choices=action_type, max_length=1, blank=True)
+    action_id = models.IntegerField(u'编号', null=True, blank=True)
+    date_action = models.DateTimeField(u'日期', auto_now_add=True)
+    is_new = models.BooleanField(u'是否为最新', default=True)
+
+    class Meta:
+        verbose_name = u'我的消息'
+        verbose_name_plural = verbose_name
+        ordering = ['is_new']
+
+    def __unicode__(self):
+        return self.action_type
