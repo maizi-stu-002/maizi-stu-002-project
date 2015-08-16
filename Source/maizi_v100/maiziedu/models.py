@@ -95,8 +95,8 @@ class BadgeDict(models.Model):
 # 学生
 class Student(models.Model):
     user = models.OneToOneField('UserProfile', verbose_name=u'用户信息')
-    certificate = models.ForeignKey('Certificate', verbose_name=u'证书')
-    badge = models.ForeignKey('BadgeDict', verbose_name=u'徽章')
+    certificate = models.ManyToManyField('Certificate', verbose_name=u'证书')
+    badge = models.ManyToManyField('BadgeDict', verbose_name=u'徽章')
     student_class = models.ForeignKey('Class', verbose_name=u'学生班级')
 
     class Meta:
@@ -233,6 +233,7 @@ class Class(models.Model):
     student_limit = models.IntegerField(u'学生人数限制', default=20, null=True, blank=True)
     current_student_count = models.IntegerField(u'现在学生人数', null=True, blank=True)
     is_active = models.BooleanField(u'状态', default=True)
+    career_course = models.ForeignKey('CareerCourse', verbose_name=u'所属职业课程', null=True, blank=True)
 
     class Meta:
         verbose_name = u'班级'
@@ -285,9 +286,8 @@ class CareerCourse(models.Model):
     name = models.CharField(u'名称', max_length=50, blank=True)
     description = models.TextField(u'课程描述', blank=True)
     total_price = models.DecimalField(u'总共价格', max_digits=5, decimal_places=2)
-    purchase = models.ForeignKey(UserPurchase, verbose_name=u'用户购买', null=True, blank=True)
-    planning = models.ForeignKey(Planning, verbose_name=u'课程计划', null=True, blank=True)
-    course_class = models.ForeignKey(Class, verbose_name=u'课程班级', null=True, blank=True)
+    purchase = models.ForeignKey('UserPurchase', verbose_name=u'用户购买', null=True, blank=True)
+    planning = models.ForeignKey('Planning', verbose_name=u'课程计划', null=True, blank=True)
 
     class Meta:
         verbose_name = u'职业课程'
@@ -302,7 +302,7 @@ class Stage(models.Model):
     name = models.CharField(u'阶段名称', max_length=50)
     description = models.CharField(u'描述', max_length=200)
     index = models.IntegerField(u'排序(从小到大)', default=999)
-    career_course = models.ForeignKey(CareerCourse, verbose_name=u'所属职业课程')
+    career_course = models.ForeignKey('CareerCourse', verbose_name=u'所属职业课程')
 
     class Meta:
         verbose_name = u'课程阶段'
@@ -320,9 +320,9 @@ class Course(models.Model):
     date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
     need_days = models.IntegerField(u'完成需要天数', null=True, blank=True)
     index = models.IntegerField(u'排序(从小到大)', default=999)
-    stage = models.ForeignKey(Stage, verbose_name=u'所属阶段')
-    planning_item = models.ForeignKey(PlanningItem, verbose_name=u'课程计划')
-    teacher = models.ForeignKey(Teacher, verbose_name=u'任课教师')
+    stage = models.ForeignKey('Stage', verbose_name=u'所属阶段')
+    planning_item = models.ForeignKey('PlanningItem', verbose_name=u'课程计划')
+    teacher = models.OneToOneField('Teacher', verbose_name=u'任课教师')
 
     class Meta:
         verbose_name = u'课程'
@@ -340,7 +340,7 @@ class Lesson(models.Model):
     video_length = models.IntegerField(u'视频长度')
     pay_count = models.IntegerField(u'付费计数', null=True, blank=True)
     index = models.IntegerField(u'排序(从小到大)', default=999)
-    course = models.ForeignKey(Course, verbose_name=u'所属课程')
+    course = models.ForeignKey('Course', verbose_name=u'所属课程')
 
     class Meta:
         verbose_name = u'课时'
@@ -355,7 +355,7 @@ class LessonResource(models.Model):
     name = models.CharField(u'名称', max_length=50, blank=True)
     download_url = models.CharField(u'下载地址', max_length=200, blank=True)
     download_count = models.IntegerField(u'下载计数', null=True, blank=True)
-    lesson = models.ForeignKey(Lesson, verbose_name=u'所属课时')
+    lesson = models.ForeignKey('Lesson', verbose_name=u'所属课时')
 
     class Meta:
         verbose_name = u'课程资源'
@@ -370,7 +370,7 @@ class Discuss(models.Model):
     content = models.TextField(u'讨论内容')
     parent_id = models.IntegerField(u'父编号', null=True, blank=True)
     date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
-    lesson = models.ForeignKey(Lesson, verbose_name=u'所属课时')
+    lesson = models.ForeignKey('Lesson', verbose_name=u'所属课时')
 
     class Meta:
         verbose_name = u'课时讨论'
@@ -381,8 +381,8 @@ class Discuss(models.Model):
 # 用户学习课时
 class UserLearnLesson(models.Model):
     date_learning = models.DateTimeField(u'学习日期', auto_now_add=True)
-    student = models.ForeignKey(Student, verbose_name=u'学生', null=True, blank=True)
-    lesson = models.ForeignKey(Lesson, verbose_name=u'课时', null=True, blank=True)
+    student = models.ForeignKey('Student', verbose_name=u'学生', null=True, blank=True)
+    lesson = models.ForeignKey('Lesson', verbose_name=u'课时', null=True, blank=True)
 
     class Meta:
         verbose_name = u'学习课时'
@@ -395,8 +395,8 @@ class UserLearnLesson(models.Model):
 # 用户收藏的课程
 class UserFavoriteCourse(models.Model):
     date_favorite = models.DateTimeField(u'喜欢时间', auto_now_add=True)
-    course = models.ForeignKey(Course, verbose_name=u'收藏课程', null=True, blank=True)
-    student = models.ForeignKey(Student, verbose_name=u'学生', null=True, blank=True)
+    course = models.ForeignKey('Course', verbose_name=u'收藏课程', null=True, blank=True)
+    student = models.ForeignKey('Student', verbose_name=u'学生', null=True, blank=True)
 
     class Meta:
         verbose_name = u'收藏课程'
