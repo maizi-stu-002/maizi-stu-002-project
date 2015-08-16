@@ -5,32 +5,60 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-# 用户信息模型
+# 用户信息模型(学生和教师共用)
 class UserProfile(AbstractUser):
     avatar_url = models.ImageField(u'头像地址', upload_to='avatar/%Y/%m', default='avatar/default.png',
                                    max_length=200, blank=True)
     avatar_thumbnail_url = models.ImageField(u'头像缩略图地址', upload_to='avatar_thumbnail/%Y/%m',
                                              default='avatar_thumbnail/default.png', max_length=200, blank=True)
-    nick_name = models.CharField(u'昵称', max_length=50, blank=True)
-    teacher_description = models.CharField(u'任课教师描述', max_length=200, blank=True)
-    qq_number = models.CharField(u'qq号', max_length=20, blank=True)
+    qq_number = models.CharField('qq', max_length=20, blank=True)
     mobile = models.CharField(u'手机号', max_length=11, blank=True, unique=True)
     company_name = models.CharField(u'公司名称', max_length=150, blank=True)
     position = models.CharField(u'地址', max_length=150, blank=True)
-    city = models.ForeignKey('CityDict', null=True, blank=True)
+    city = models.ForeignKey('CityDict', null=True, blank=True, verbose_name=u'城市')
+    province = models.ForeignKey('ProvinceDict', null=True, blank=True, verbose_name=u'省份')
 
     class Meta:
         verbose_name = u'用户信息'
         verbose_name_plural = verbose_name
-        ordering = ['-id']
+        ordering = ['-date_joined']
 
     def __unicode__(self):
-        return self.nick_name
+        return self.username
+
+
+# 学生
+class Student(models.Model):
+    user = models.OneToOneField('UserProfile', verbose_name=u'学生信息')
+    certificate = models.ManyToManyField('Certificate', verbose_name=u'证书')
+    badge = models.ManyToManyField('BadgeDict', verbose_name=u'徽章')
+    student_class = models.ForeignKey('Class', verbose_name=u'所属班级')
+
+    class Meta:
+        verbose_name = u'学生'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.user.username
+
+
+# 教师
+class Teacher(models.Model):
+    user = models.OneToOneField('UserProfile', verbose_name=u'老师信息')
+    position = models.CharField(max_length=50, verbose_name=u'职位')
+    description = models.CharField(max_length=200, verbose_name=u'描述')
+
+    class Meta:
+        verbose_name = u'教师'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.user.username
 
 
 # 国家
 class CountryDict(models.Model):
-    name = models.CharField(u'国家', max_length=50, blank=True)
+    name = models.CharField(u'国家', max_length=50)
 
     class Meta:
         verbose_name = u'国家'
@@ -42,8 +70,8 @@ class CountryDict(models.Model):
 
 # 省份
 class ProvinceDict(models.Model):
-    name = models.CharField(u'省份', max_length=50, blank=True)
-    country = models.ForeignKey('CountryDict')
+    name = models.CharField(u'省份', max_length=50)
+    country = models.ForeignKey('CountryDict', verbose_name=u'所属国家')
 
     class Meta:
         verbose_name = u'省份'
@@ -55,8 +83,8 @@ class ProvinceDict(models.Model):
 
 # 城市
 class CityDict(models.Model):
-    name = models.CharField(u'城市', max_length=50, blank=True)
-    province = models.ForeignKey('ProvinceDict')
+    name = models.CharField(u'城市', max_length=50)
+    province = models.ForeignKey('ProvinceDict', verbose_name=u'所属省份')
 
     class Meta:
         verbose_name = u'城市'
@@ -92,39 +120,10 @@ class BadgeDict(models.Model):
         return self.name
 
 
-# 学生
-class Student(models.Model):
-    user = models.OneToOneField('UserProfile', verbose_name=u'用户信息')
-    certificate = models.ManyToManyField('Certificate', verbose_name=u'证书')
-    badge = models.ManyToManyField('BadgeDict', verbose_name=u'徽章')
-    student_class = models.ForeignKey('Class', verbose_name=u'学生班级')
-
-    class Meta:
-        verbose_name = u'学生'
-        verbose_name_plural = verbose_name
-
-    def __unicode__(self):
-        return self.user.nick_name
-
-
-# 教师
-class Teacher(models.Model):
-    user = models.OneToOneField('UserProfile', verbose_name=u'用户')
-    position = models.CharField(max_length=50, verbose_name=u'职位')
-    description = models.CharField(max_length=200, verbose_name=u'描述')
-
-    class Meta:
-        verbose_name = u'教师'
-        verbose_name_plural = verbose_name
-
-    def __unicode__(self):
-        return self.user.nick_name
-
-
 # 我的课程
 class MyCourse(models.Model):
     course_type = (
-        ('1', 'course'),  # 普通课程
+        ('1', 'course'),  # 零散课程
         ('2', 'career_course'),  # 职业课程
     )
     course_type = models.CharField(u'课程类型', choices=course_type, max_length=1)
@@ -139,14 +138,15 @@ class MyCourse(models.Model):
         return '%s, %s, %s' % (self.course_type, self.course_id, self.date_learning)
 
 
-# 论坛评论
+# 博客评论
 class BlogComment(models.Model):
     content = models.TextField(u'评论内容')
     is_subject = models.BooleanField(u'是否是主评论')
     date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
+    blog = models.ForeignKey('Blog', verbose_name=u'所属博客')
 
     class Meta:
-        verbose_name = u'论坛评论'
+        verbose_name = u'博客评论'
         verbose_name_plural = verbose_name
         ordering = ['-date_publish']
 
@@ -154,29 +154,28 @@ class BlogComment(models.Model):
         return '%s, %s' % (self.content, self.date_publish)
 
 
-# 论坛分类
+# 博客分类
 class BlogCategoryDict(models.Model):
     name = models.CharField(u'分类名称', max_length=200)
 
     class Meta:
-        verbose_name = u'论坛分类'
+        verbose_name = u'博客分类'
         verbose_name_plural = verbose_name
 
     def __unicode__(self):
         return self.name
 
 
-# 论坛
+# 博客
 class Blog(models.Model):
     title = models.CharField(u'标题', max_length=200)
     date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
     is_active = models.BooleanField(u'状态', default=True)
     content = models.TextField(u'内容', blank=True)
-    comment = models.ManyToManyField(BlogComment, blank=True, verbose_name=u'评论')
-    category = models.ManyToManyField(BlogCategoryDict, blank=True, verbose_name=u'分类')
+    category = models.ManyToManyField('BlogCategoryDict', blank=True, verbose_name=u'分类')
 
     class Meta:
-        verbose_name = u'论坛'
+        verbose_name = u'博客'
         verbose_name_plural = verbose_name
         ordering = ['-date_publish']
 
@@ -184,13 +183,13 @@ class Blog(models.Model):
         return '%s, %s' % (self.title, self.date_publish)
 
 
-# 论坛关键字
+# 关键字
 class Keywords(models.Model):
     name = models.CharField(u'关键字', max_length=50, blank=True)
-    blog = models.ManyToManyField(Blog, verbose_name=u'所属论坛', blank=True)
+    blog = models.ManyToManyField('Blog', verbose_name=u'博客', blank=True)
 
     class Meta:
-        verbose_name = u'论坛关键字'
+        verbose_name = u'博客关键字'
         verbose_name_plural = verbose_name
 
     def __unicode__(self):
@@ -215,7 +214,7 @@ class Planning(models.Model):
     date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
     is_active = models.BooleanField(u'状态', default=True)
     version = models.IntegerField(u'版本')
-    planning_item = models.ManyToManyField(PlanningItem, verbose_name=u'计划事件')
+    planning_item = models.ManyToManyField('PlanningItem', verbose_name=u'计划事件')
 
     class Meta:
         verbose_name = u'计划'
@@ -253,10 +252,10 @@ class UserPurchase(models.Model):
     pay_stage = (  # 购买阶段
         ('0', 'all'),  # 所有阶段
         ('1', u'阶段一'),  # 阶段一
-        ('2', u'阶段二'),  # 阶段二
+        ('2', u'其它阶段'),  # 其它阶段
     )
     pay_way = (  # 支付方式
-        ('1', 'alipay'),  # 阿里支付宝
+        ('1', 'alipay'),  # 支付宝
         ('2', 'kuaiqian'),  # 快钱
     )
     pay_status = (  # 支付状态
@@ -265,13 +264,14 @@ class UserPurchase(models.Model):
     )
     pay_price = models.DecimalField(u'购买价格', max_digits=5, decimal_places=2)
     ording_coding = models.CharField(u'预定语言', max_length=200)
-    trad_coding = models.CharField(u'交易语言', max_length=200, blank=True)
+    trad_coding = models.CharField(u'交易语言', max_length=200)
     pay_type = models.CharField(u'购买类型', choices=pay_type, max_length=1)
     pay_stage = models.CharField(u'购买阶段', choices=pay_stage, max_length=1)
     date_pay = models.DateTimeField(u'支付时间', auto_now_add=True)
-    date_limit = models.DateTimeField(u'限制时间', null=True, blank=True)
-    pay_way = models.CharField(u'支付方式', choices=pay_way, blank=True, max_length=1)
-    pay_status = models.CharField(u'支付状态', choices=pay_status, blank=True, max_length=1)
+    date_limit = models.DateTimeField(u'限制时间')
+    pay_way = models.CharField(u'支付方式', choices=pay_way, max_length=1)
+    pay_status = models.CharField(u'支付状态', choices=pay_status, max_length=1)
+    CareerCourse = models.ForeignKey('CareerCourse', verbose_name=u'职业课程')
 
     class Meta:
         verbose_name = u'用户购买信息'
@@ -283,15 +283,16 @@ class UserPurchase(models.Model):
 
 # 职业课程
 class CareerCourse(models.Model):
-    name = models.CharField(u'名称', max_length=50, blank=True)
+    name = models.CharField(u'课程名称', max_length=50, blank=True)
     description = models.TextField(u'课程描述', blank=True)
-    total_price = models.DecimalField(u'总共价格', max_digits=5, decimal_places=2)
-    purchase = models.ForeignKey('UserPurchase', verbose_name=u'用户购买', null=True, blank=True)
-    planning = models.ForeignKey('Planning', verbose_name=u'课程计划', null=True, blank=True)
+    total_price = models.DecimalField(u'全款价格', max_digits=5, decimal_places=2)
+    planning = models.ForeignKey('Planning', verbose_name=u'所属计划')
+    keywords = models.ManyToManyField('Keywords', verbose_name=u'关键字')
 
     class Meta:
         verbose_name = u'职业课程'
         verbose_name_plural = verbose_name
+        ordering = ['-id']
 
     def __unicode__(self):
         return '%s, %s' % (self.name, self.total_price)
@@ -318,7 +319,7 @@ class Course(models.Model):
     description = models.CharField(u'描述', max_length=200)
     is_active = models.BooleanField(u'状态', default=True)
     date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
-    need_days = models.IntegerField(u'完成需要天数', null=True, blank=True)
+    need_days = models.IntegerField(u'完成需要天数', default=7)
     index = models.IntegerField(u'排序(从小到大)', default=999)
     stage = models.ForeignKey('Stage', verbose_name=u'所属阶段')
     planning_item = models.ForeignKey('PlanningItem', verbose_name=u'课程计划')
@@ -378,7 +379,7 @@ class Discuss(models.Model):
         ordering = ['-date_publish']
 
 
-# 用户学习课时
+# 用户学过的课时
 class UserLearnLesson(models.Model):
     date_learning = models.DateTimeField(u'学习日期', auto_now_add=True)
     student = models.ForeignKey('Student', verbose_name=u'学生', null=True, blank=True)
@@ -394,7 +395,7 @@ class UserLearnLesson(models.Model):
 
 # 用户收藏的课程
 class UserFavoriteCourse(models.Model):
-    date_favorite = models.DateTimeField(u'喜欢时间', auto_now_add=True)
+    date_favorite = models.DateTimeField(u'收藏时间', auto_now_add=True)
     course = models.ForeignKey('Course', verbose_name=u'收藏课程', null=True, blank=True)
     student = models.ForeignKey('Student', verbose_name=u'学生', null=True, blank=True)
 
@@ -410,7 +411,7 @@ class UserFavoriteCourse(models.Model):
 class Strategic(models.Model):
     title = models.CharField(u'标题', max_length=50)
     image = models.ImageField(u'图片', upload_to='strategic/%Y/%m', max_length=200)
-    description = models.CharField(u'战略连接描述', max_length=200, blank=True)
+    description = models.CharField(u'战略合作描述', max_length=200, blank=True)
     callback_url = models.URLField(u'url地址')
     date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
     index = models.IntegerField(u'排序(从小到大)', default=999)
@@ -474,12 +475,12 @@ class Setting(models.Model):
         return u'学过的课程用时： %s' % (self.course_days_rule * self.course_days_rule + self.know_course_value)
 
 
-# 日志
+# 消息日志
 class Log(models.Model):
     action_type = (
         ('1', u'系统消息'),
         ('2', u'课程消息回复'),
-        ('3', u'论坛消息回复'),
+        ('3', u'博客消息回复'),
     )
     userA = models.IntegerField(u'用户A')
     userB = models.IntegerField(u'用户B', null=True, blank=True)
@@ -501,7 +502,7 @@ class MyMessage(models.Model):
     action_type = (
         ('1', u'系统消息'),
         ('2', u'课程消息回复'),
-        ('3', u'论坛消息回复'),
+        ('3', u'博客消息回复'),
     )
     userA = models.IntegerField(u'用户A')
     userB = models.IntegerField(u'用户B', null=True, blank=True)
@@ -517,3 +518,202 @@ class MyMessage(models.Model):
 
     def __unicode__(self):
         return self.action_type
+
+
+# 测试记录
+class ExamineRecord(models.Model):
+    is_active = models.BooleanField(u'状态', default=True)
+    score = models.IntegerField(u'得分', default=0)
+    study_point = models.IntegerField(u'学力点', default=0)
+    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+
+    class Meta:
+        verbose_name = u'测试记录'
+        verbose_name_plural = verbose_name
+        ordering = ['-date_publish']
+
+    def __unicode__(self):
+        return self.score
+
+
+# 任务记录
+class MissionRecord(models.Model):
+    date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
+    score = models.IntegerField(u'得分', default=0)
+    examine_record = models.ForeignKey('ExamineRecord', verbose_name=u'测试记录')
+
+    class Meta:
+        verbose_name = u'任务记录'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.score
+
+
+# 课后作业记录
+class HomeworkRecord(models.Model):
+    upload_file = models.CharField(u'课后作业记录', max_length=200)
+    examine_record = models.ForeignKey('ExamineRecord', verbose_name=u'测试记录')
+
+    class Meta:
+        verbose_name = u'课后作业记录'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.upload_file
+
+
+# 在线编程记录
+class CodeExciseRecord(models.Model):
+    result = models.TextField(u'结果')
+    examine_record = models.ForeignKey('ExamineRecord', verbose_name=u'测试记录')
+
+    class Meta:
+        verbose_name = u'在线编程记录'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.result
+
+
+# 小测试记录
+class QuizRecord(models.Model):
+    type = (
+        ('1', 'shoos'),
+        ('2', 'fill field'),
+    )
+    type = models.CharField(u'小测试记录', choices=type, max_length=1)
+    result = models.CharField(u'结果', max_length=200)
+    examine_record = models.ForeignKey('ExamineRecord', verbose_name=u'测试纪录')
+
+    class Meta:
+        verbose_name = u'小测试纪录'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.result
+
+
+# 测试
+class Examine(models.Model):
+    examine_type = (
+        ('1', 'homeword'),  # 课后作业
+        ('2', 'paper'),  # 试卷
+        ('3', 'code_excise'),  # 在线编程
+        ('4', 'mission'),  # 任务
+    )
+    relation_type = (
+        ('1', 'lesson'),  # 课时
+        ('2', 'course'),  # 课程
+        ('3', 'mission'),  # 任务
+    )
+    examine_type = models.CharField(u'测试类型', choices=examine_type, max_length=1)
+    relation_type = models.CharField(u'关联类型', choices=relation_type, max_length=1)
+    relation_id = models.IntegerField(u'关联id')
+    is_active = models.BooleanField(u'状态', default=True)
+
+    class Meta:
+        verbose_name = u'测试'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.relation_id
+
+
+# 任务
+class Mission(models.Model):
+    description = models.CharField(u'任务描述', max_length=200)
+    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+    score = models.IntegerField(u'得分', default=0)
+    examine = models.ForeignKey('Examine', verbose_name=u'测试')
+
+    class Meta:
+        verbose_name = u'任务'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.score
+
+
+# 在线编程
+class CodeExcise(models.Model):
+    lang_type = (
+        ('1', 'python'),
+        ('2', 'PHP'),
+        ('3', 'Java'),
+        ('4', 'Android'),
+        ('5', 'iOS'),
+        # 有需求后面再添加
+    )
+    description = models.TextField(u'描述')
+    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+    lang_type = models.CharField(u'语言类型', choices=lang_type, max_length=2)
+    result = models.TextField(u'结果')
+    score = models.ImageField(u'得分', default=0)
+    study_point = models.IntegerField(u'学力点', default=0)
+    examine = models.ForeignKey('Examine', verbose_name=u'测试')
+
+    class Meta:
+        verbose_name = u'在线编程'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.score
+
+
+# 小测试
+class Quiz(models.Model):
+    quiz_type = (
+        ('1', 'shoos'),
+        ('2', 'fill field'),
+    )
+    item_list = (
+        ('1', 'JSON'),
+        ('2', 'HTML'),
+    )
+    question = models.TextField(u'问题')
+    quiz_type = models.CharField(u'测试类型', choices=quiz_type, max_length=1)
+    item_list = models.CharField(u'项目清单', choices=item_list, max_length=1)
+    result = models.CharField(u'结果', max_length=200)
+    paper = models.ForeignKey('Paper', verbose_name=u'试卷')
+
+    class Meta:
+        verbose_name = u'小测试'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.result
+
+
+# 试卷
+class Paper(models.Model):
+    description = models.TextField(u'描述')
+    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+    score = models.IntegerField(u'得分', default=0)
+    study_point = models.IntegerField(u'学力点', default=0)
+    examine = models.ForeignKey('Examine', verbose_name=u'测试')
+
+    class Meta:
+        verbose_name = u'试卷'
+        verbose_name_plural = verbose_name
+        ordering = ['-date_publish']
+
+    def __unicode__(self):
+        return self.score
+
+
+# 课后作业
+class Homework(models.Model):
+    description = models.TextField(u'描述')
+    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+    score = models.IntegerField(u'得分', default=0)
+    study_point = models.IntegerField(u'学力点', default=0)
+    examine = models.ForeignKey('Examine', verbose_name=u'测试')
+
+    class Meta:
+        verbose_name = u'课后作业'
+        verbose_name_plural = verbose_name
+        ordering = ['-date_publish']
+
+    def __unicode__(self):
+        return self.score
