@@ -1,10 +1,50 @@
 #!/usr/bin/env python
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
+import logging
 from django.shortcuts import render
-from django.http import HttpResponse
+
+logger = logging.getLogger('maiziedu.home_views')
 
 
-# Create your views here.
+# 全局信息
+def global_setting(request):
+    pass
+
+
+# 首页
 def index(request):
-    return HttpResponse('<center><h1><cneter>欢迎来到麦子官网1.0项目，下面，让我们开始愉快地干活吧^_^</h1></center>')
+    try:
+        return render(request, 'home/index.html', locals())
+    except Exception as e:
+        logger.error(e)
+
+
+# 广告
+def ad(request):
+    pass
+
+
+# 搜索
+def search_command(request):
+    pass
+
+
+# 课程
+def course(request):
+    pass
+
+
+# 名师风采及详细页
+def teacher(request):
+    pass
+
+
+# 推荐阅读
+def suggerst_read(request):
+    pass
+
+
+# 底部
+def bottom(request):
+    pass
