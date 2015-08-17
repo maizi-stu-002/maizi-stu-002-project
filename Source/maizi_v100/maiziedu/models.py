@@ -115,7 +115,7 @@ class Certificate(models.Model):
 class BadgeDict(models.Model):
     name = models.CharField(u'徽章名称', max_length=50)
     badge_url = models.ImageField(u'徽章地址', upload_to='badge/%Y/%m', default='badge/default.png',
-                                  certmax_length=200, blank=True)
+                                  max_length=200, blank=True)
 
     class Meta:
         verbose_name = u'徽章'
