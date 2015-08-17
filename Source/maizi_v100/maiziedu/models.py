@@ -458,7 +458,7 @@ class Links(models.Model):
 class Ad(models.Model):
     title = models.CharField(u'标题', max_length=50)
     description = models.CharField(u'描述', max_length=200, blank=True)
-    img_url = models.ImageField(u'图片链接', upload_to='ad/%Y/%m', default='certificate/default.png', max_length=200)
+    img_url = models.ImageField(u'图片链接', upload_to='ad/%Y/%m', default='ad/default.png', max_length=200)
     callback_url = models.CharField(u'回调函数链接', max_length=200)
 
     class Meta:
