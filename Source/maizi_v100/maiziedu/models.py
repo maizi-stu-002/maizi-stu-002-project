@@ -27,19 +27,22 @@ class UserProfile(AbstractUser):
         return self.username
 
 
-# 学生
-class Student(models.Model):
-    user = models.OneToOneField('UserProfile', verbose_name=u'学生信息')
-    certificate = models.ManyToManyField('Certificate', verbose_name=u'证书')
-    badge = models.ManyToManyField('BadgeDict', verbose_name=u'徽章')
-    student_class = models.ForeignKey('Class', verbose_name=u'所属班级')
+# 班级
+class Class(models.Model):
+    code = models.CharField(u'何种语言', max_length=10)
+    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+    student_limit = models.IntegerField(u'学生人数限制', default=20, null=True, blank=True)
+    current_student_count = models.IntegerField(u'现在学生人数', null=True, blank=True)
+    is_active = models.BooleanField(u'状态', default=True)
+    career_course = models.ForeignKey('CareerCourse', verbose_name=u'职业课程', null=True, blank=True)
 
     class Meta:
-        verbose_name = u'学生'
+        verbose_name = u'班级'
         verbose_name_plural = verbose_name
+        ordering = ['code', '-date_publish', 'is_active']
 
     def __unicode__(self):
-        return self.user.username
+        return self.code
 
 
 # 教师
@@ -310,24 +313,6 @@ class CareerCourse(models.Model):
         return '%s, %s' % (self.name, self.total_price)
 
 
-# 班级
-class Class(models.Model):
-    code = models.CharField(u'何种语言', max_length=10)
-    date_publish = models.DateTimeField(u'发布事件', auto_now_add=True)
-    student_limit = models.IntegerField(u'学生人数限制', default=20, null=True, blank=True)
-    current_student_count = models.IntegerField(u'现在学生人数', null=True, blank=True)
-    is_active = models.BooleanField(u'状态', default=True)
-    career_course = models.ForeignKey('CareerCourse', verbose_name=u'职业课程', null=True, blank=True)
-
-    class Meta:
-        verbose_name = u'班级'
-        verbose_name_plural = verbose_name
-        ordering = ['code', '-date_publish', 'is_active']
-
-    def __unicode__(self):
-        return self.code
-
-
 # 课程阶段
 class Stage(models.Model):
     name = models.CharField(u'阶段名称', max_length=50)
@@ -477,7 +462,7 @@ class Links(models.Model):
 class Ad(models.Model):
     title = models.CharField(u'标题', max_length=50)
     description = models.CharField(u'描述', max_length=200, blank=True)
-    img_utl = models.ImageField(u'图片链接', upload_to='ad/%Y/%m', max_length=200)
+    img_url = models.ImageField(u'图片链接', upload_to='ad/%Y/%m', max_length=200)
     callback_url = models.CharField(u'回调函数链接', max_length=200)
 
     class Meta:
@@ -748,3 +733,18 @@ class Homework(models.Model):
 
     def __unicode__(self):
         return self.score
+
+
+# 学生
+class Student(models.Model):
+    user = models.OneToOneField('UserProfile', verbose_name=u'学生信息')
+    certificate = models.ManyToManyField('Certificate', verbose_name=u'证书')
+    badge = models.ManyToManyField('BadgeDict', verbose_name=u'徽章')
+    student_class = models.ForeignKey('Class', verbose_name=u'所属班级')
+
+    class Meta:
+        verbose_name = u'学生'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.user.username

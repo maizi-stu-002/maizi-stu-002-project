@@ -3,6 +3,8 @@
 
 import logging
 from django.shortcuts import render
+from models import *
+from django.conf import settings
 
 logger = logging.getLogger('maiziedu.home_views')
 
@@ -15,14 +17,13 @@ def global_setting(request):
 # 首页
 def index(request):
     try:
+        # 媒体信息
+        media_url = settings.MEDIA_URL
+        # 广告
+        ad_list = Ad.objects.all()
         return render(request, 'home/index.html', locals())
     except Exception as e:
         logger.error(e)
-
-
-# 广告
-def ad(request):
-    pass
 
 
 # 搜索
