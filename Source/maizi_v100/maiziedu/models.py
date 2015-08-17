@@ -29,7 +29,7 @@ class UserProfile(AbstractUser):
 
 # 班级
 class Class(models.Model):
-    code = models.CharField(u'何种语言', max_length=10)
+    code = models.CharField(u'语言', max_length=10)
     date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
     student_limit = models.IntegerField(u'学生人数限制', default=20, null=True, blank=True)
     current_student_count = models.IntegerField(u'现在学生人数', null=True, blank=True)
@@ -100,7 +100,8 @@ class CityDict(models.Model):
 # 证书
 class Certificate(models.Model):
     name = models.CharField(u'证书名称', max_length=50)
-    image_url = models.ImageField(u'证书图片地址', upload_to='certificate/%Y/%m', max_length=200, blank=True)
+    image_url = models.ImageField(u'证书图片地址', upload_to='certificate/%Y/%m',
+                                  default='certificate/default.png', max_length=200, blank=True)
 
     class Meta:
         verbose_name = u'证书'
@@ -113,7 +114,8 @@ class Certificate(models.Model):
 # 徽章
 class BadgeDict(models.Model):
     name = models.CharField(u'徽章名称', max_length=50)
-    badge_url = models.ImageField(u'徽章地址', upload_to='badge/%Y/%m', max_length=200, blank=True)
+    badge_url = models.ImageField(u'徽章地址', upload_to='badge/%Y/%m', default='badge/default.png',
+                                  certmax_length=200, blank=True)
 
     class Meta:
         verbose_name = u'徽章'
@@ -272,25 +274,27 @@ class CareerCourse(models.Model):
     name = models.CharField(u'课程名称', max_length=50, blank=True)
     description = models.TextField(u'课程描述', blank=True)
     total_price = models.DecimalField(u'总共价格', max_digits=6, decimal_places=2)
-    imgurl = models.CharField(u'图片路径',max_length=50,blank=False,null=True)
-    symbol = models.CharField(u'代号',max_length=10,blank=False,null=True)
+    img_url = models.ImageField(u'图片路径', upload_to='career_course/%Y/%m',
+                                default='career_course/default.png', max_length=200)
+    symbol = models.CharField(u'代号', max_length=10, blank=False, null=True)
     purchase = models.ForeignKey(UserPurchase, verbose_name=u'用户购买', null=True, blank=True)
     planning = models.ForeignKey(Planning, verbose_name=u'课程计划', null=True, blank=True)
-    def getCourses(self):
+
+    def get_courses(self):
         # CareerCourse下所有course
         return (course for stage in self.stage_set.all() for course in stage.course_set.all())
 
-    def getLessons(self):
+    def get_lessons(self):
         # CareerCourse下所有Lesssons
         return (lesson for course in self.getCourses() for lesson in course.lesson_set.all())
 
-    def getUserCount(self):
+    def get_user_ount(self):
         # 所有学习该课程的学生人数
         return UserLearnLesson.objects.filter(lesson__in=self.getLessons()).count()
 
-    def getTimeToSpend(self):
+    def get_time_to_spend(self):
         # 职业课程下所有视频累计时间
-        return  sum(map(lambda x:x.video_length,self.getLessons()))
+        return sum(map(lambda x: x.video_length, self.getLessons()))
 
     class Meta:
         verbose_name = u'职业课程'
@@ -320,6 +324,7 @@ class Stage(models.Model):
 class Course(models.Model):
     name = models.CharField(u'名称', max_length=50)
     description = models.CharField(u'描述', max_length=200)
+    img_url = models.ImageField(u'图片', upload_to='course/%Y/%m', default='course/default.png', max_length=200)
     is_active = models.BooleanField(u'状态', default=True)
     date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
     need_days = models.IntegerField(u'完成需要天数', default=7)
@@ -327,11 +332,9 @@ class Course(models.Model):
     stage = models.ForeignKey('Stage', verbose_name=u'所属阶段')
     planning_item = models.ForeignKey('PlanningItem', verbose_name=u'课程计划')
     teacher = models.OneToOneField('Teacher', verbose_name=u'任课教师')
-    avatarUrl = models.ImageField(upload_to="course",default="course/default.jpg",verbose_name=u"课程缩略图",null=True,blank=True)
 
-    def getTimeToSpend(self):
+    def get_time_to_spend(self):
         return sum([lesson.video_length for lesson in self.lesson_set.all()])
-
 
     class Meta:
         verbose_name = u'课程'
@@ -419,7 +422,7 @@ class UserFavoriteCourse(models.Model):
 # 战略合作
 class Strategic(models.Model):
     title = models.CharField(u'标题', max_length=50)
-    image = models.ImageField(u'图片', upload_to='strategic/%Y/%m', max_length=200)
+    image = models.ImageField(u'图片', upload_to='strategic/%Y/%m', default='strategic/default.png', max_length=200)
     description = models.CharField(u'战略合作描述', max_length=200, blank=True)
     callback_url = models.URLField(u'url地址')
     date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
@@ -455,7 +458,7 @@ class Links(models.Model):
 class Ad(models.Model):
     title = models.CharField(u'标题', max_length=50)
     description = models.CharField(u'描述', max_length=200, blank=True)
-    img_url = models.ImageField(u'图片链接', upload_to='ad/%Y/%m', max_length=200)
+    img_url = models.ImageField(u'图片链接', upload_to='ad/%Y/%m', default='certificate/default.png', max_length=200)
     callback_url = models.CharField(u'回调函数链接', max_length=200)
 
     class Meta:
@@ -658,7 +661,7 @@ class CodeExcise(models.Model):
     date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
     lang_type = models.CharField(u'语言类型', choices=lang_type, max_length=2)
     result = models.TextField(u'结果')
-    score = models.ImageField(u'得分', default=0)
+    score = models.IntegerField(u'得分', default=0)
     study_point = models.IntegerField(u'学力点', default=0)
     examine = models.ForeignKey('Examine', verbose_name=u'测试')
 
