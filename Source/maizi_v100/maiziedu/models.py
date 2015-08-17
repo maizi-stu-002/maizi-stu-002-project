@@ -290,19 +290,25 @@ class CareerCourse(models.Model):
     name = models.CharField(u'课程名称', max_length=50, blank=True)
     description = models.TextField(u'课程描述', blank=True)
     total_price = models.DecimalField(u'总共价格', max_digits=6, decimal_places=2)
-    imgurl = models.CharField(u'图片路径', max_length=50, blank=False, null=True)
-    symbol = models.CharField(u'代号', max_length=10, blank=False, null=True)
-    purchase = models.ForeignKey('UserPurchase', verbose_name=u'用户购买', null=True, blank=True)
-    planning = models.ForeignKey('Planning', verbose_name=u'课程计划', null=True, blank=True)
+    imgurl = models.CharField(u'图片路径',max_length=50,blank=False,null=True)
+    symbol = models.CharField(u'代号',max_length=10,blank=False,null=True)
+    purchase = models.ForeignKey(UserPurchase, verbose_name=u'用户购买', null=True, blank=True)
+    planning = models.ForeignKey(Planning, verbose_name=u'课程计划', null=True, blank=True)
+    def getCourses(self):
+        # CareerCourse下所有course
+        return (course for stage in self.stage_set.all() for course in stage.course_set.all())
+
+    def getLessons(self):
+        # CareerCourse下所有Lesssons
+        return (lesson for course in self.getCourses() for lesson in course.lesson_set.all())
 
     def getUserCount(self):
-        # stage下所有course
-        course_list = [course for stage in self.stage_set.all() for course in stage.course_set.all()]
-        # 各个course下所有的lesson
-        lesson_list = [lesson for course in course_list for lesson in course.lesson_set.all()]
-        result = UserLearnLesson.objects.filter(lesson__in=lesson_list).count()
-        print course_list, lesson_list
-        return result
+        # 所有学习该课程的学生人数
+        return UserLearnLesson.objects.filter(lesson__in=self.getLessons()).count()
+
+    def getTimeToSpend(self):
+        # 职业课程下所有视频累计时间
+        return  sum(map(lambda x:x.video_length,self.getLessons()))
 
     class Meta:
         verbose_name = u'职业课程'
@@ -339,6 +345,11 @@ class Course(models.Model):
     stage = models.ForeignKey('Stage', verbose_name=u'所属阶段')
     planning_item = models.ForeignKey('PlanningItem', verbose_name=u'课程计划')
     teacher = models.OneToOneField('Teacher', verbose_name=u'任课教师')
+    avatarUrl = models.ImageField(upload_to="course",default="course/default.jpg",verbose_name=u"课程缩略图",null=True,blank=True)
+
+    def getTimeToSpend(self):
+        return sum([lesson.video_length for lesson in self.lesson_set.all()])
+
 
     class Meta:
         verbose_name = u'课程'
