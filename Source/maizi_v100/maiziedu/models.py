@@ -228,24 +228,6 @@ class Planning(models.Model):
         return '%s, %s' % (self.version, self.date_publish)
 
 
-# 班级
-class Class(models.Model):
-    code = models.CharField(u'何种语言', max_length=10)
-    date_publish = models.DateTimeField(u'发布事件', auto_now_add=True)
-    student_limit = models.IntegerField(u'学生人数限制', default=20, null=True, blank=True)
-    current_student_count = models.IntegerField(u'现在学生人数', null=True, blank=True)
-    is_active = models.BooleanField(u'状态', default=True)
-    career_course = models.ForeignKey('CareerCourse', verbose_name=u'所属职业课程', null=True, blank=True)
-
-    class Meta:
-        verbose_name = u'班级'
-        verbose_name_plural = verbose_name
-        ordering = ['code', '-date_publish', 'is_active']
-
-    def __unicode__(self):
-        return '%s, %s' % (self.code, self.date_publish)
-
-
 # 用户购买信息
 class UserPurchase(models.Model):
     pay_type = (  # 购买类型
