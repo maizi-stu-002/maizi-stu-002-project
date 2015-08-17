@@ -51,6 +51,7 @@ coverage.xml
 *.log
 migrations/
 uploads/
+settings.py
 
 # Sphinx documentation
 docs/_build/
