@@ -11,7 +11,7 @@ class UserProfile(AbstractUser):
                                    max_length=200, blank=True)
     avatar_thumbnail_url = models.ImageField(u'头像缩略图地址', upload_to='avatar_thumbnail/%Y/%m',
                                              default='avatar_thumbnail/default.png', max_length=200, blank=True)
-    qq_number = models.CharField('qq', max_length=20, blank=True)
+    qq_number = models.CharField('QQ', max_length=20, blank=True)
     mobile = models.CharField(u'手机号', max_length=11, blank=True, unique=True)
     company_name = models.CharField(u'公司名称', max_length=150, blank=True)
     position = models.CharField(u'地址', max_length=150, blank=True)
@@ -123,7 +123,7 @@ class BadgeDict(models.Model):
 # 我的课程
 class MyCourse(models.Model):
     course_type = (
-        ('1', 'course'),  # 零散课程
+        ('1', 'course'),  # 其它课程
         ('2', 'career_course'),  # 职业课程
     )
     course_type = models.CharField(u'课程类型', choices=course_type, max_length=1)
