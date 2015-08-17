@@ -3,17 +3,17 @@
 {% load staticfiles %}
   <div class="container">
     <ol class="breadcrumb">
-      <li><a href="#">首页</a></li>
-      <li><a href="#">首页</a></li>
-      <li class="active">Android开发工程师</li>
+      <li><a href={% url "index" %}>首页</a></li>
+      <li><a href={% url "course" %}>课程</a></li>
+      <li class="active">{{course.name}}</li>
     </ol>
   </div>
   <div class="container">
     <div class="course-stage">
       <div class="course-stage-lead">
         <dl class="course-stage-dl">
-          <dt>Android开发工程师</dt>
-          <dd>Google正式推出Android L后，便掀起了Android系统的新高潮！各种高端技术惊呆了小编，增强的用户中心。智能化用户认证，多任务功能，应用程序调用，亮瞎了开发者，麦子学院为了让大家了解Android L，专门拍摄了Nexus5真机操作讲解，让你开速掌握新技能...</dd>
+          <dt>{{course.name}}</dt>
+          <dd>{{course.description}}</dd>
         </dl>
         <div class="row">
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">

@@ -1,44 +1,3 @@
-<<<<<<< HEAD
-# -*- coding: utf-8 -*-
-from django.db import models
-import random
-
-# Create your models here.
-
-class CourseManager(models.Manager):
-
-	def exclude_duplicated(seq):
-		try:
-			length = len(seq)
-		except TypeError:
-			return False
-		else:
-			# 对应seq索引值的区间
-			m,n = 0,length-1
-		try:
-			ex = int(length)
-		except ValueError:
-			ex = -1
-		finally:
-			if ex>0:
-				ex = -ex
-			elif ex is 0:
-				ex = -1
-		def _ex(last_randints=[]):
-			while 1:
-				cur_randint = random.randint(m,n)
-				if duplicate:
-					break
-				elif cur_randint not in last_randints[ex:]:
-					last_randints.append(cur_randint)
-					break
-			return cur_randint
-		return _ex
-
-
-class Course(models.Model):
-	objects = CourseManager()
-=======
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -66,7 +25,7 @@ class UserProfile(AbstractUser):
         ordering = ['-id']
 
     def __unicode__(self):
-        return self.nick_name
+        return self.username
 
 
 # 国家
@@ -145,7 +104,7 @@ class Student(models.Model):
         verbose_name_plural = verbose_name
 
     def __unicode__(self):
-        return self.user.nick_name
+        return self.user.username
 
 
 # 教师
@@ -267,28 +226,11 @@ class Planning(models.Model):
         return '%s, %s' % (self.version, self.date_publish)
 
 
-# 班级
-class Class(models.Model):
-    code = models.CharField(u'何种语言', max_length=10)
-    date_publish = models.DateTimeField(u'发布事件', auto_now_add=True)
-    student_limit = models.IntegerField(u'学生人数限制', default=20, null=True, blank=True)
-    current_student_count = models.IntegerField(u'现在学生人数', null=True, blank=True)
-    is_active = models.BooleanField(u'状态', default=True)
-
-    class Meta:
-        verbose_name = u'班级'
-        verbose_name_plural = verbose_name
-        ordering = ['code', '-date_publish', 'is_active']
-
-    def __unicode__(self):
-        return '%s, %s' % (self.code, self.date_publish)
-
-
 # 用户购买信息
 class UserPurchase(models.Model):
     pay_type = (  # 购买类型
         ('1', 'VIP'),  # vip
-        ('2', 'CarreCourse'),  # 职业课程
+        ('2', 'CareerCourse'),  # 职业课程
     )
     pay_stage = (  # 购买阶段
         ('0', 'all'),  # 所有阶段
@@ -325,18 +267,42 @@ class UserPurchase(models.Model):
 class CareerCourse(models.Model):
     name = models.CharField(u'名称', max_length=50, blank=True)
     description = models.TextField(u'课程描述', blank=True)
-    total_price = models.DecimalField(u'总共价格', max_digits=5, decimal_places=2)
+    total_price = models.DecimalField(u'总共价格', max_digits=6, decimal_places=2)
+    imgurl = models.CharField(u'图片路径',max_length=50,blank=False,null=True)
+    symbol = models.CharField(u'代号',max_length=10,blank=False,null=True)
     purchase = models.ForeignKey(UserPurchase, verbose_name=u'用户购买', null=True, blank=True)
     planning = models.ForeignKey(Planning, verbose_name=u'课程计划', null=True, blank=True)
-    course_class = models.ForeignKey(Class, verbose_name=u'课程班级', null=True, blank=True)
-
+    def getUserCount(self):
+        # stage下所有course
+        course_list = [course for stage in self.stage_set.all() for course in stage.course_set.all()]
+        # 各个course下所有的lesson
+        lesson_list = [lesson for course in course_list for lesson in course.lesson_set.all()]
+        result = UserLearnLesson.objects.filter(lesson__in=lesson_list).count()
+        print course_list,lesson_list
+        return result
     class Meta:
         verbose_name = u'职业课程'
         verbose_name_plural = verbose_name
+        ordering = ("symbol",)
 
     def __unicode__(self):
         return '%s, %s' % (self.name, self.total_price)
 
+# 班级
+class Class(models.Model):
+    code = models.CharField(u'何种语言', max_length=10)
+    date_publish = models.DateTimeField(u'发布事件', auto_now_add=True)
+    student_limit = models.IntegerField(u'学生人数限制', default=20, null=True, blank=True)
+    current_student_count = models.IntegerField(u'现在学生人数', null=True, blank=True)
+    is_active = models.BooleanField(u'状态', default=True)
+    career_course = models.ForeignKey(CareerCourse, verbose_name=u'职业课程',null=True,blank=True)
+    class Meta:
+        verbose_name = u'班级'
+        verbose_name_plural = verbose_name
+        ordering = ['code', '-date_publish', 'is_active']
+
+    def __unicode__(self):
+        return self.code
 
 # 课程阶段
 class Stage(models.Model):
@@ -428,9 +394,10 @@ class UserLearnLesson(models.Model):
     class Meta:
         verbose_name = u'学习课时'
         verbose_name_plural = verbose_name
+        unique_together = ('student', 'lesson')
 
     def __unicode__(self):
-        return self.date_learning
+        return self.student.user.username + "-" + self.lesson.name
 
 
 # 用户收藏的课程
@@ -523,4 +490,4 @@ class Setting(models.Model):
 #
 #     def __unicode__(self):
 #         return self.action_type
->>>>>>> master
+

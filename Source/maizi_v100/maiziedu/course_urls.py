@@ -1,11 +1,14 @@
 from django.conf.urls import include, url
 from django.contrib import admin
-import course_views
+from course_views import *
 urlpatterns = [
 	# url(r'course/(?P<pageId>\d{1,2})?/?$'
-	url(r'^course$',course_views.course,name="course"),
-	url(r'^course/',include([
-		url(r'^andriod/$',course_views.details,name="andriod"),
+	url(r'^course/$',course,name="course"),
+	url(r'^course/',
+		include([
+			url(r'^(?P<name>[\w-]+)/$',
+				CourseView.as_view()),
 
-	])),
+		])
+	),
 ]
