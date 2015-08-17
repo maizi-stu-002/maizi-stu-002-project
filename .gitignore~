@@ -5,6 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
+settings.py
 # Distribution / packaging
 .Python
 env/
@@ -49,8 +50,6 @@ coverage.xml
 
 # Django stuff:
 *.log
-migrations/
-uploads/
 
 # Sphinx documentation
 docs/_build/
@@ -60,3 +59,4 @@ target/
 
 # Pycharm
 .idea/
+migrations/
