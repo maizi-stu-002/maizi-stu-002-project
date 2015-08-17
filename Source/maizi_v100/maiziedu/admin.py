@@ -6,10 +6,7 @@ from models import *
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
     list_display = ('username', 'qq_number', 'mobile', 'city')
-=======
-    list_display = ('username', 'email', 'mobile', 'date_joined')
 admin.site.register(UserProfile, UserProfileAdmin)  # 用户
 
 
@@ -21,7 +18,6 @@ admin.site.register(Student, StudentAdmin)  # 学生
 class TeacherAdmin(admin.ModelAdmin):
     list_display = ('user', 'position', 'description')
 admin.site.register(Teacher, TeacherAdmin)  # 教师
->>>>>>> 27143159db726c122915d8c739a9d983cc303f72
 
 
 admin.site.register(CountryDict)  # 国家

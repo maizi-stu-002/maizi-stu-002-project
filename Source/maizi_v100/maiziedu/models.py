@@ -53,9 +53,7 @@ class Teacher(models.Model):
         verbose_name_plural = verbose_name
 
     def __unicode__(self):
-
         return self.user.username
-
 
 
 # 国家
@@ -120,8 +118,6 @@ class BadgeDict(models.Model):
 
     def __unicode__(self):
         return self.name
-
-
 
 
 # 我的课程
@@ -229,7 +225,6 @@ class Planning(models.Model):
         return '%s, %s' % (self.version, self.date_publish)
 
 
-
 # 班级
 class Class(models.Model):
     code = models.CharField(u'何种语言', max_length=10)
@@ -251,21 +246,22 @@ class Class(models.Model):
 # 用户购买信息
 class UserPurchase(models.Model):
     pay_type = (  # 购买类型
-        ('1', 'VIP'),  # vip
-        ('2', 'CareerCourse'),  # 职业课程
+                  ('1', 'VIP'),  # vip
+                  ('2', 'CareerCourse'),  # 职业课程
     )
     pay_stage = (  # 购买阶段
-        ('0', 'all'),  # 所有阶段
-        ('1', u'阶段一'),  # 阶段一
-        ('2', u'其它阶段'),  # 其它阶段
+                   ('0', 'all'),  # 所有阶段
+                   ('1', u'阶段一'),  # 阶段一
+                   ('2', u'其它阶段'),  # 其它阶段
     )
     pay_way = (  # 支付方式
-        ('1', 'alipay'),  # 支付宝
-        ('2', 'kuaiqian'),  # 快钱
+                 ('1', 'alipay'),  # 支付宝
+                 ('2', 'kuaiqian'),  # 快钱
     )
+
     pay_status = (  # 支付状态
-        ('1', 'success'),  # 成功
-        ('2', 'failed'),  # 失败
+                    ('1', 'success'),  # 成功
+                    ('2', 'failed'),  # 失败
     )
     pay_price = models.DecimalField(u'购买价格', max_digits=5, decimal_places=2)
     ording_coding = models.CharField(u'预定语言', max_length=200)
@@ -291,19 +287,20 @@ class CareerCourse(models.Model):
     name = models.CharField(u'课程名称', max_length=50, blank=True)
     description = models.TextField(u'课程描述', blank=True)
     total_price = models.DecimalField(u'总共价格', max_digits=6, decimal_places=2)
-    imgurl = models.CharField(u'图片路径',max_length=50,blank=False,null=True)
-    symbol = models.CharField(u'代号',max_length=10,blank=False,null=True)
-    purchase = models.ForeignKey(UserPurchase, verbose_name=u'用户购买', null=True, blank=True)
-    planning = models.ForeignKey(Planning, verbose_name=u'课程计划', null=True, blank=True)
+    imgurl = models.CharField(u'图片路径', max_length=50, blank=False, null=True)
+    symbol = models.CharField(u'代号', max_length=10, blank=False, null=True)
+    purchase = models.ForeignKey('UserPurchase', verbose_name=u'用户购买', null=True, blank=True)
+    planning = models.ForeignKey('Planning', verbose_name=u'课程计划', null=True, blank=True)
+
     def getUserCount(self):
         # stage下所有course
         course_list = [course for stage in self.stage_set.all() for course in stage.course_set.all()]
         # 各个course下所有的lesson
         lesson_list = [lesson for course in course_list for lesson in course.lesson_set.all()]
         result = UserLearnLesson.objects.filter(lesson__in=lesson_list).count()
-        print course_list,lesson_list
+        print course_list, lesson_list
         return result
-        
+
     class Meta:
         verbose_name = u'职业课程'
         verbose_name_plural = verbose_name
@@ -312,6 +309,7 @@ class CareerCourse(models.Model):
     def __unicode__(self):
         return '%s, %s' % (self.name, self.total_price)
 
+
 # 班级
 class Class(models.Model):
     code = models.CharField(u'何种语言', max_length=10)
@@ -319,7 +317,8 @@ class Class(models.Model):
     student_limit = models.IntegerField(u'学生人数限制', default=20, null=True, blank=True)
     current_student_count = models.IntegerField(u'现在学生人数', null=True, blank=True)
     is_active = models.BooleanField(u'状态', default=True)
-    career_course = models.ForeignKey(CareerCourse, verbose_name=u'职业课程',null=True,blank=True)
+    career_course = models.ForeignKey('CareerCourse', verbose_name=u'职业课程', null=True, blank=True)
+
     class Meta:
         verbose_name = u'班级'
         verbose_name_plural = verbose_name
@@ -327,6 +326,7 @@ class Class(models.Model):
 
     def __unicode__(self):
         return self.code
+
 
 # 课程阶段
 class Stage(models.Model):
@@ -493,7 +493,7 @@ class Setting(models.Model):
     """
     学过的课程用时 = 课程用时 × 乘积参数 + 天数调整
     """
-    score_pass_line = models.IntegerField(u'课程通过分数线',default=60)
+    score_pass_line = models.IntegerField(u'课程通过分数线', default=60)
     course_days_rule = models.IntegerField(u'课程用时', null=True, blank=True)
     know_course_percent = models.FloatField(u'乘积参数', null=True, blank=True)
     know_course_value = models.IntegerField(u'天数调整', null=True, blank=True)
@@ -506,52 +506,6 @@ class Setting(models.Model):
         return u'学过的课程用时： %s' % (self.course_days_rule * self.course_days_rule + self.know_course_value)
 
 
-<<<<<<< HEAD
-# # 日志
-# class Log(models.Model):
-#     action_type = (
-#         ('1', u'系统消息'),
-#         ('2', u'课程消息回复'),
-#         ('3', u'论坛消息回复'),
-#     )
-#     userA = models.IntegerField(u'用户A')
-#     userB = models.IntegerField(u'用户B', null=True, blank=True)
-#     action_type = models.CharField(u'类型', choices=action_type, max_length=1, blank=True)
-#     action_id = models.IntegerField(u'编号', null=True, blank=True)
-#     date_action = models.DateTimeField(u'日期', auto_now_add=True)
-#
-#     class Meta:
-#         verbose_name = u'日志'
-#         verbose_name_plural = verbose_name
-#         ordering = ['-date_action']
-#
-#     def __unicode__(self):
-#         return self.action_type
-#
-#
-# # 我的消息
-# class MyMessage(models.Model):
-#     action_type = (
-#         ('1', u'系统消息'),
-#         ('2', u'课程消息回复'),
-#         ('3', u'论坛消息回复'),
-#     )
-#     userA = models.IntegerField(u'用户A')
-#     userB = models.IntegerField(u'用户B', null=True, blank=True)
-#     action_type = models.CharField(u'类型', choices=action_type, max_length=1, blank=True)
-#     action_id = models.IntegerField(u'编号', null=True, blank=True)
-#     date_action = models.DateTimeField(u'日期', auto_now_add=True)
-#     is_new = models.BooleanField(u'是否为最新', default=True)
-#
-#     class Meta:
-#         verbose_name = u'我的消息'
-#         verbose_name_plural = verbose_name
-#         ordering = ['is_new']
-#
-#     def __unicode__(self):
-#         return self.action_type
-
-=======
 # 消息日志
 class Log(models.Model):
     action_type = (
@@ -794,4 +748,3 @@ class Homework(models.Model):
 
     def __unicode__(self):
         return self.score
->>>>>>> 27143159db726c122915d8c739a9d983cc303f72
