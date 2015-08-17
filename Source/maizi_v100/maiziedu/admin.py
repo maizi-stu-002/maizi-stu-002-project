@@ -11,12 +11,12 @@ admin.site.register(UserProfile, UserProfileAdmin)  # 用户
 
 
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'mobile', 'date_joined', 'student_class')
+    list_display = ('user', 'student_class')
 admin.site.register(Student, StudentAdmin)  # 学生
 
 
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('username', 'position', 'email', 'mobile', 'date_joined')
+    list_display = ('user', 'position', 'description')
 admin.site.register(Teacher, TeacherAdmin)  # 教师
 
 
@@ -37,7 +37,7 @@ admin.site.register(BlogCategoryDict)  # 博客分类
 
 
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ('title', 'content', 'category', 'is_active', 'date_publish')
+    list_display = ('title', 'content', 'is_active', 'date_publish')
 admin.site.register(Blog, BlogAdmin)  # 博客
 
 
@@ -51,9 +51,7 @@ class ClassAdmin(admin.ModelAdmin):
 admin.site.register(Class, ClassAdmin)  # 班级
 
 
-class UserPurchaseAdmin(admin.ModelAdmin):
-    list_display = ('trad_coding', 'pay_status', 'pay_stage', 'date_limit')
-admin.site.register(UserPurchase, UserProfileAdmin)  # 用户购买信息
+admin.site.register(UserPurchase)  # 用户购买信息
 
 
 class CareerCourseAdmin(admin.ModelAdmin):
