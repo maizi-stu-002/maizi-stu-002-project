@@ -327,11 +327,13 @@ class Course(models.Model):
     img_url = models.ImageField(u'图片', upload_to='course/%Y/%m', default='course/default.png', max_length=200)
     is_active = models.BooleanField(u'状态', default=True)
     date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
+    play_count = models.IntegerField(u'播放次数', default=0)
+    favorite_count = models.IntegerField(u'收藏次数', default=0)
     need_days = models.IntegerField(u'完成需要天数', default=7)
     index = models.IntegerField(u'排序(从小到大)', default=999)
     stage = models.ForeignKey('Stage', verbose_name=u'所属阶段')
     planning_item = models.ForeignKey('PlanningItem', verbose_name=u'课程计划')
-    teacher = models.OneToOneField('Teacher', verbose_name=u'任课教师')
+    teacher = models.ForeignKey('Teacher', verbose_name=u'任课教师')
 
     def get_time_to_spend(self):
         return sum([lesson.video_length for lesson in self.lesson_set.all()])
@@ -348,7 +350,7 @@ class Course(models.Model):
 # 课时（课程具体的每节课）
 class Lesson(models.Model):
     name = models.CharField(u'名称', max_length=50)
-    video_url = models.CharField(u'视频地址', max_length=200)
+    video_url = models.URLField(u'视频地址', max_length=200)
     video_length = models.IntegerField(u'视频长度')
     pay_count = models.IntegerField(u'付费计数', null=True, blank=True)
     index = models.IntegerField(u'排序(从小到大)', default=999)
@@ -365,7 +367,7 @@ class Lesson(models.Model):
 # 课程资源
 class LessonResource(models.Model):
     name = models.CharField(u'名称', max_length=50, blank=True)
-    download_url = models.CharField(u'下载地址', max_length=200, blank=True)
+    download_url = models.URLField(u'下载地址', max_length=200, blank=True)
     download_count = models.IntegerField(u'下载计数', null=True, blank=True)
     lesson = models.ForeignKey('Lesson', verbose_name=u'所属课时')
 
@@ -458,8 +460,8 @@ class Links(models.Model):
 class Ad(models.Model):
     title = models.CharField(u'标题', max_length=50)
     description = models.CharField(u'描述', max_length=200, blank=True)
-    img_url = models.ImageField(u'图片链接', upload_to='ad/%Y/%m', default='certificate/default.png', max_length=200)
-    callback_url = models.CharField(u'回调函数链接', max_length=200)
+    img_url = models.ImageField(u'图片链接', upload_to='ad/%Y/%m', default='ad/default.png', max_length=200)
+    callback_url = models.URLField(u'回调函数链接', max_length=200)
 
     class Meta:
         verbose_name = u'广告'

@@ -208,3 +208,14 @@ LOGGING = {
         },
     }
 }
+
+# 网站导航
+HOME_PAGE = 'http://127.0.0.1:8000'
+ABOUT_US = 'http://www.maiziedu.com/static/aboutus/about.html'
+CONTACT_US = 'http://www.maiziedu.com/static/aboutus/contact.html'
+JOIN_US = 'http://www.maiziedu.com/static/aboutus/join.html'
+
+# 关注我们
+WEIBO_SINA = 'http://weibo.com/microoh'
+WEIXIN = 'http://127.0.0.1:8000'
+WEIBO_TENCENT = 'http://t.qq.com/microoh'

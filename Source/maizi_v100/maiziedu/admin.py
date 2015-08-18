@@ -63,7 +63,7 @@ admin.site.register(Stage)  # 课程阶段
 
 
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'teacher', 'need_days', 'date_publish')
+    list_display = ('name', 'description', 'teacher', 'need_days', 'date_publish', 'play_count', 'favorite_count')
 admin.site.register(Course, CourseAdmin)  # 课程
 
 

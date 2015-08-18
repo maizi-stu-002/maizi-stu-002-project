@@ -20,7 +20,22 @@ def index(request):
         # 媒体信息
         media_url = settings.MEDIA_URL
         # 广告
-        ad_list = Ad.objects.all()
+        ad_list = Ad.objects.all()[:6]
+        # 教师
+        teacher_list = Teacher.objects.all()
+        # 战略合作
+        strategic_list = Strategic.objects.all()
+        # 友情链接
+        link_list = Links.objects.all()
+        # 网站导航
+        home_page = settings.HOME_PAGE
+        about_us = settings.ABOUT_US
+        contact_us = settings.CONTACT_US
+        join_us = settings.JOIN_US
+        # 关注我们
+        weibo_sina = settings.WEIBO_SINA
+        weibo_tencent = settings.WEIBO_TENCENT
+        weixin = settings.WEIXIN
         return render(request, 'home/index.html', locals())
     except Exception as e:
         logger.error(e)

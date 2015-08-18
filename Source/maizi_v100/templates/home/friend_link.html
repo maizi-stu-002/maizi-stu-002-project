@@ -1,0 +1,17 @@
+<dl class="f-link">
+    <dt>友情链接</dt>
+    <dd>
+        <ul>
+            <li class="cf">
+                {% for link in link_list %}
+                <a href="{{ link.callback_url }}">{{ link.title }}</a><span>|</span>
+                {% endfor %}
+            </li>
+{#            <li class="cf">#}
+{#                {% for link in link_list02 %}#}
+{#                <a href="{{ link.callback_url }}">{{ link.title }}</a><span>|</span>#}
+{#                {% endfor %}#}
+{#            </li>#}
+        </ul>
+    </dd>
+</dl>
