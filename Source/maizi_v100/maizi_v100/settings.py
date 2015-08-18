@@ -210,7 +210,7 @@ LOGGING = {
 }
 
 # 网站导航
-HOME = 'http://127.0.0.1:8000'
+HOME_PAGE = 'http://127.0.0.1:8000'
 ABOUT_US = 'http://www.maiziedu.com/static/aboutus/about.html'
 CONTACT_US = 'http://www.maiziedu.com/static/aboutus/contact.html'
 JOIN_US = 'http://www.maiziedu.com/static/aboutus/join.html'
