@@ -9,7 +9,7 @@
         <ul class="cf">
             {% for strategic in strategic_list %}
             <li>
-                <a href="{{ strategic.callback_url }}"><img src="{{ strategic.image }}"></a>
+                <a href="{{ strategic.callback_url }}"><img src="{{ media_url }}{{ strategic.image }}"></a>
             </li>
             {% endfor %}
         </ul>

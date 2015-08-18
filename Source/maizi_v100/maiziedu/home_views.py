@@ -20,7 +20,7 @@ def index(request):
         # 媒体信息
         media_url = settings.MEDIA_URL
         # 广告
-        ad_list = Ad.objects.all()
+        ad_list = Ad.objects.all()[:6]
         # 教师
         teacher_list = Teacher.objects.all()
         # 战略合作
