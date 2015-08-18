@@ -10,50 +10,19 @@
 
         <div class="tc-list-w">
             <ul id="foo" class="cf">
+                {% for teacher in teacher_list %}
                 <li>
                     <dl>
-                        <dt><a href="" style="border-left-color:#00A388;"><img src="{% static 'test/2.jpg' %}"></a>
+                        <dt><a href="" style="border-left-color:#00A388;"><img src="{{ teacher.user.avatar_thumbnail_url }}"></a>
                         </dt>
                         <dd>
-                            <h2>杨丰盛</h2>
+                            <h2>{{ teacher.user.first_name }}{{ teacher.user.last_name }}</h2>
 
-                            <h3>安卓框架联盟总架构师</h3>
+                            <h3>{{ teacher.position }}</h3>
                         </dd>
                     </dl>
                 </li>
-                <li>
-                    <dl>
-                        <dt><a href="" style="border-left-color:#FF6038;"><img
-                                src="t{% static 'test/17.jpg' %}"></a></dt>
-                        <dd>
-                            <h2>杨丰盛</h2>
-
-                            <h3>安卓框架联盟总架构师</h3>
-                        </dd>
-                    </dl>
-                </li>
-                <li>
-                    <dl>
-                        <dt><a href="" style="border-left-color:#00A388;"><img src="{% static 'test/2.jpg' %}"></a>
-                        </dt>
-                        <dd>
-                            <h2>杨丰盛</h2>
-
-                            <h3>安卓框架联盟总架构师</h3>
-                        </dd>
-                    </dl>
-                </li>
-                <li>
-                    <dl>
-                        <dt><a href="" style="border-left-color:#78BD8B;"><img src="{% static 'test/2.jpg' %}"></a>
-                        </dt>
-                        <dd>
-                            <h2>杨丰盛</h2>
-
-                            <h3>安卓框架联盟总架构师</h3>
-                        </dd>
-                    </dl>
-                </li>
+                {% endfor %}
             </ul>
         </div>
         <a id="next" class="next" href="#"></a>

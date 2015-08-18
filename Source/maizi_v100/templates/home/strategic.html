@@ -7,18 +7,11 @@
 <div class="container">
     <div class="v5-strategic">
         <ul class="cf">
+            {% for strategic in strategic_list %}
             <li>
-                <a href=""><img src="{% static 'test/6.png' %}"></a>
+                <a href="{{ strategic.callback_url }}"><img src="{{ strategic.image }}"></a>
             </li>
-            <li>
-                <a href=""><img src="{% static 'test/7.png' %}"></a>
-            </li>
-            <li>
-                <a href=""><img src="{% static 'test/9.jpg' %}"></a>
-            </li>
-            <li>
-                <a href=""><img src="{% static 'test/10.jpg' %}"></a>
-            </li>
+            {% endfor %}
         </ul>
     </div>
 </div>

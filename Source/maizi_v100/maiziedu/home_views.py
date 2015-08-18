@@ -21,6 +21,12 @@ def index(request):
         media_url = settings.MEDIA_URL
         # 广告
         ad_list = Ad.objects.all()
+        # 教师
+        teacher_list = Teacher.objects.all()
+        # 战略合作
+        strategic_list = Strategic.objects.all()
+        # 友情链接
+        link_list = Links.objects.all()
         return render(request, 'home/index.html', locals())
     except Exception as e:
         logger.error(e)
