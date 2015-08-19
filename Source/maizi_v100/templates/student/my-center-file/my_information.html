@@ -1,0 +1,134 @@
+{% extends 'student/my-center-file/student_base.html' %}
+{% load staticfiles %}
+{% block title %}<title>个人中心-我的资料</title>{% endblock %}
+{% block main_content %}
+
+    <script>
+    function show(ida){
+        // 仅适用于IE,clientWidth,clientHeight,分别指宽度和高度,以px计
+        // scrollLeft.返回第一个匹配元素的水平滚动条位置
+        var screenWidth = document.body.clientWidth+document.body.scrollLeft;
+        var screenHeight = document.body.clientHeight;
+        var divObj = document.getElementById(ida);
+        // 返回元素的宽度和高度,以px计
+        var divWidth = divObj.offsetWidth;
+        var divHeight = divObj.offsetHeight;
+        // 这里是让div的位置位于当前屏幕的中间位置,这里的当前屏幕指的是不带滚动条的
+        var left = parseInt((screenWidth - divWidth)/2);
+        var top = parseInt((screenHeight - divHeight)/2);
+        // 带上滚动条的位置进行计算
+        divObj.style.left = left+document.body.scrollLeft;
+        // scrollTop 滚动条的垂直位置
+        divObj.style.top = top + document.body.scrollTop;
+        divObj.style.display="block";
+    }
+</script>
+
+
+  <!--设置新手机号/修改手机号-->
+<div class="modal_fade"  tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" id="aaaa" style="border:1px solid #A2C5ED;position:absolute;display:none;>
+        <div class="modal-content2">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="newMobilnumberModalLabel">
+
+                    修改手机号
+
+                </h4>
+            </div>
+            <div class="modal-body">
+                <section class="box-newMobilnumber" id="box-newMobilnumber">
+                    <form id="new_mobile_form" action="/user/mobile/update/sendsms/" method="post" onsubmit="new_mobile_form_submit();return false;" autocomplete="off">
+                        <input type='hidden' name='csrfmiddlewaretoken' value='tc3CwWsOjh0UO4xShLJ0nkdFulf3VCpd' />
+                    <ul class="form-horizontal v5-form-horizontal">
+                        <li class="row form-group">
+                            <div class="form-group cf"><input class="form-control" id="id_mobile_um" maxlength="50" name="mobile_um" placeholder="请输入手机号码" type="text" value="13112214296" /></div>
+                        </li>
+                        <li class="row form-group">
+                            <div class="form-group cf"><input autocomplete="off" class="form-control form-control-captcha fl" id="id_captcha_um_1" name="captcha_um_1" placeholder="请输入验证码" type="text" /> <input class="form-control form-control-captcha fl" id="id_captcha_um_0" name="captcha_um_0" placeholder="请输入验证码" type="hidden" value="519ebfe751296d45c1307eb4bb797e021cc4b4d4" /> &nbsp;<img src="/group/captcha/image/519ebfe751296d45c1307eb4bb797e021cc4b4d4/" alt="captcha" class="captcha" /><span class="v5-yzm fr"><a id='mobile-captcha-refresh' class="captcha-refresh" href="#">换一张</a></span></div>
+                        </li>
+                        <li class="row form-group v5-pdt">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-8">
+                                <button type="button" class="btn btn-micv5 btn-md btn-block" onclick="new_mobile_form_submit()">下一步</button>
+                                <input id="id_uid_um" name="uid_um" type="hidden" value="19936" />
+                            </div>
+                            <div class="col-sm-2"></div>
+                        </li>
+                    </ul>
+                    </form>
+                    <div id="new_mobile_tips" class="tips-error bg-danger">错误提示</div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+  <div class="uc-boxa">
+    <div class="uc-h1">基本资料</div>
+    <form class="form-horizontal uc-form" role="form">
+      <div class="form-group">
+        <label for="" class="col-sm-2 control-label v5-hd-lable v5-gutter">头像</label>
+        <div class="col-sm-10 dis-table v5-gutter">
+          <div class="user-hd dis-table-cell"><img src="{% static "test/15.jpg"%}"></div>
+          <div class="update-hd dis-table-cell">
+            <p>支持jpg、gif、png或bmp格式的图片，建议文件小于20M</p>
+            <a href="#" data-toggle="modal" data-target="#cutimgModal">更改头像</a>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="" class="col-sm-2 control-label v5-gutter">昵称</label>
+        <div class="col-sm-4 v5-gutter">
+          <input type="text" class="form-control" id="" placeholder="">
+        </div>
+        <div class="col-sm-6 v5-control-label"></div>
+      </div>
+      <div class="form-group">
+        <label for="" class="col-sm-2 control-label v5-gutter">城市</label>
+        <div class="col-sm-3 v5-gutter">
+          <select class="form-control">
+            <option>城市</option>
+          </select>
+        </div>
+        <div class="col-sm-3 v5-gutter">
+          <select class="form-control">
+            <option>城市</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="" class="col-sm-2 control-label v5-gutter">Q Q</label>
+        <div class="col-sm-4 v5-gutter">
+          <input type="text" class="form-control" id="" placeholder="">
+        </div>
+        <div class="col-sm-6 v5-control-label"></div>
+      </div>
+      <div class="form-group">
+        <label for="" class="col-sm-2 control-label v5-gutter">手机</label>
+        <div class="col-sm-6 v5-gutter v5-control-label">
+          <span>18026547890</span><a href="javascript:;"  onclick="show('aaaa')"  data-toggle="modal" data-target=""  class="link-default v5-gutter">修改</a>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="" class="col-sm-2 control-label v5-gutter">邮箱</label>
+        <div class="col-sm-6 v5-gutter v5-control-label">
+          <span>puddishin@foxmail.com</span><a href="/my_center/modify_email" data-toggle="modal" data-target="" class="link-default v5-gutter">修改</a>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="" class="col-sm-2 control-label v5-gutter">密码</label>
+        <div class="col-sm-10 v5-gutter v5-control-label">
+          <a href="#" data-toggle="modal" data-target="#resetpswModal" action= class="link-default">修改密码</a>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-2 v5-gutter">
+          <button type="submit" class="btn btn-micv5 btn-block">保存</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  {% endblock %}
