@@ -42,8 +42,6 @@ admin.site.register(Blog, BlogAdmin)  # 博客
 
 
 admin.site.register(Keywords)  # 关键字
-admin.site.register(PlanningItem)  # 计划事项
-admin.site.register(Planning)  # 计划
 
 
 class ClassAdmin(admin.ModelAdmin):
@@ -93,17 +91,19 @@ admin.site.register(Links, LinksAdmin)  # 友情链接
 
 
 admin.site.register(Ad)  # 广告
-admin.site.register(Setting)  # 设置
-admin.site.register(Log)  # 消息日志
-admin.site.register(MyMessage)  # 我的消息
-admin.site.register(ExamineRecord)  # 测试记录
-admin.site.register(MissionRecord)  # 任务记录
-admin.site.register(HomeworkRecord)  # 课后作业记录
-admin.site.register(CodeExciseRecord)  # 在线编程记录
-admin.site.register(QuizRecord)  # 小测试记录
-admin.site.register(Examine)  # 测试
-admin.site.register(Mission)  # 任务
-admin.site.register(CodeExcise)  # 在线编程
-admin.site.register(Quiz)  # 小测试
-admin.site.register(Paper)  # 试卷
-admin.site.register(Homework)  # 课后作业
+# admin.site.register(PlanningItem)  # 计划事项
+# admin.site.register(Planning)  # 计划
+# admin.site.register(Setting)  # 设置
+# admin.site.register(Log)  # 消息日志
+# admin.site.register(MyMessage)  # 我的消息
+# admin.site.register(ExamineRecord)  # 测试记录
+# admin.site.register(MissionRecord)  # 任务记录
+# admin.site.register(HomeworkRecord)  # 课后作业记录
+# admin.site.register(CodeExciseRecord)  # 在线编程记录
+# admin.site.register(QuizRecord)  # 小测试记录
+# admin.site.register(Examine)  # 测试
+# admin.site.register(Mission)  # 任务
+# admin.site.register(CodeExcise)  # 在线编程
+# admin.site.register(Quiz)  # 小测试
+# admin.site.register(Paper)  # 试卷
+# admin.site.register(Homework)  # 课后作业
