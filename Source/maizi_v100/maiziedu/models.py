@@ -201,35 +201,6 @@ class Keywords(models.Model):
         return self.name
 
 
-# 计划事项
-class PlanningItem(models.Model):
-    start_date = models.DateTimeField(u'开始时间', auto_now_add=True, null=True, blank=True)
-    end_date = models.DateTimeField(u'结束时间', null=True, blank=True)
-
-    class Meta:
-        verbose_name = u'计划事项'
-        verbose_name_plural = verbose_name
-
-    def __unicode__(self):
-        return '%s, %s' % (self.start_date, self.end_date)
-
-
-# 计划
-class Planning(models.Model):
-    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
-    is_active = models.BooleanField(u'状态', default=True)
-    version = models.IntegerField(u'版本')
-    planning_item = models.ManyToManyField('PlanningItem', verbose_name=u'计划事件')
-
-    class Meta:
-        verbose_name = u'计划'
-        verbose_name_plural = verbose_name
-        ordering = ['-date_publish']
-
-    def __unicode__(self):
-        return '%s, %s' % (self.version, self.date_publish)
-
-
 # 用户购买信息
 class UserPurchase(models.Model):
     pay_type = (  # 购买类型
@@ -278,7 +249,7 @@ class CareerCourse(models.Model):
                                 default='career_course/default.png', max_length=200)
     symbol = models.CharField(u'代号', max_length=10, blank=False, null=True)
     purchase = models.ForeignKey(UserPurchase, verbose_name=u'用户购买', null=True, blank=True)
-    planning = models.ForeignKey(Planning, verbose_name=u'课程计划', null=True, blank=True)
+    # planning = models.ForeignKey(Planning, verbose_name=u'课程计划', null=True, blank=True)
 
     def get_courses(self):
         # CareerCourse下所有course
@@ -332,7 +303,7 @@ class Course(models.Model):
     need_days = models.IntegerField(u'完成需要天数', default=7)
     index = models.IntegerField(u'排序(从小到大)', default=999)
     stage = models.ForeignKey('Stage', verbose_name=u'所属阶段')
-    planning_item = models.ForeignKey('PlanningItem', verbose_name=u'课程计划')
+    # planning_item = models.ForeignKey('PlanningItem', verbose_name=u'课程计划')
     teacher = models.ForeignKey('Teacher', verbose_name=u'任课教师')
 
     def get_time_to_spend(self):
@@ -471,268 +442,6 @@ class Ad(models.Model):
         return self.title
 
 
-# 设置
-class Setting(models.Model):
-    """
-    学过的课程用时 = 课程用时 × 乘积参数 + 天数调整
-    """
-    score_pass_line = models.IntegerField(u'课程通过分数线', default=60)
-    course_days_rule = models.IntegerField(u'课程用时', null=True, blank=True)
-    know_course_percent = models.FloatField(u'乘积参数', null=True, blank=True)
-    know_course_value = models.IntegerField(u'天数调整', null=True, blank=True)
-
-    class Meta:
-        verbose_name = u'设置'
-        verbose_name_plural = verbose_name
-
-    def __unicode__(self):
-        return u'学过的课程用时： %s' % (self.course_days_rule * self.course_days_rule + self.know_course_value)
-
-
-# 消息日志
-class Log(models.Model):
-    action_type = (
-        ('1', u'系统消息'),
-        ('2', u'课程消息回复'),
-        ('3', u'博客消息回复'),
-    )
-    userA = models.IntegerField(u'用户A')
-    userB = models.IntegerField(u'用户B', null=True, blank=True)
-    action_type = models.CharField(u'类型', choices=action_type, max_length=1, blank=True)
-    action_id = models.IntegerField(u'编号', null=True, blank=True)
-    date_action = models.DateTimeField(u'日期', auto_now_add=True)
-
-    class Meta:
-        verbose_name = u'日志'
-        verbose_name_plural = verbose_name
-        ordering = ['-date_action']
-
-    def __unicode__(self):
-        return self.action_type
-
-
-# 我的消息
-class MyMessage(models.Model):
-    action_type = (
-        ('1', u'系统消息'),
-        ('2', u'课程消息回复'),
-        ('3', u'博客消息回复'),
-    )
-    userA = models.IntegerField(u'用户A')
-    userB = models.IntegerField(u'用户B', null=True, blank=True)
-    action_type = models.CharField(u'类型', choices=action_type, max_length=1, blank=True)
-    action_id = models.IntegerField(u'编号', null=True, blank=True)
-    date_action = models.DateTimeField(u'日期', auto_now_add=True)
-    is_new = models.BooleanField(u'是否为最新', default=True)
-
-    class Meta:
-        verbose_name = u'我的消息'
-        verbose_name_plural = verbose_name
-        ordering = ['is_new']
-
-    def __unicode__(self):
-        return self.action_type
-
-
-# 测试记录
-class ExamineRecord(models.Model):
-    is_active = models.BooleanField(u'状态', default=True)
-    score = models.IntegerField(u'得分', default=0)
-    study_point = models.IntegerField(u'学力点', default=0)
-    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
-
-    class Meta:
-        verbose_name = u'测试记录'
-        verbose_name_plural = verbose_name
-        ordering = ['-date_publish']
-
-    def __unicode__(self):
-        return self.score
-
-
-# 任务记录
-class MissionRecord(models.Model):
-    date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
-    score = models.IntegerField(u'得分', default=0)
-    examine_record = models.ForeignKey('ExamineRecord', verbose_name=u'测试记录')
-
-    class Meta:
-        verbose_name = u'任务记录'
-        verbose_name_plural = verbose_name
-
-    def __unicode__(self):
-        return self.score
-
-
-# 课后作业记录
-class HomeworkRecord(models.Model):
-    upload_file = models.CharField(u'课后作业记录', max_length=200)
-    examine_record = models.ForeignKey('ExamineRecord', verbose_name=u'测试记录')
-
-    class Meta:
-        verbose_name = u'课后作业记录'
-        verbose_name_plural = verbose_name
-
-    def __unicode__(self):
-        return self.upload_file
-
-
-# 在线编程记录
-class CodeExciseRecord(models.Model):
-    result = models.TextField(u'结果')
-    examine_record = models.ForeignKey('ExamineRecord', verbose_name=u'测试记录')
-
-    class Meta:
-        verbose_name = u'在线编程记录'
-        verbose_name_plural = verbose_name
-
-    def __unicode__(self):
-        return self.result
-
-
-# 小测试记录
-class QuizRecord(models.Model):
-    type = (
-        ('1', 'shoos'),
-        ('2', 'fill field'),
-    )
-    type = models.CharField(u'小测试记录', choices=type, max_length=1)
-    result = models.CharField(u'结果', max_length=200)
-    examine_record = models.ForeignKey('ExamineRecord', verbose_name=u'测试纪录')
-
-    class Meta:
-        verbose_name = u'小测试纪录'
-        verbose_name_plural = verbose_name
-
-    def __unicode__(self):
-        return self.result
-
-
-# 测试
-class Examine(models.Model):
-    examine_type = (
-        ('1', 'homeword'),  # 课后作业
-        ('2', 'paper'),  # 试卷
-        ('3', 'code_excise'),  # 在线编程
-        ('4', 'mission'),  # 任务
-    )
-    relation_type = (
-        ('1', 'lesson'),  # 课时
-        ('2', 'course'),  # 课程
-        ('3', 'mission'),  # 任务
-    )
-    examine_type = models.CharField(u'测试类型', choices=examine_type, max_length=1)
-    relation_type = models.CharField(u'关联类型', choices=relation_type, max_length=1)
-    relation_id = models.IntegerField(u'关联id')
-    is_active = models.BooleanField(u'状态', default=True)
-
-    class Meta:
-        verbose_name = u'测试'
-        verbose_name_plural = verbose_name
-
-    def __unicode__(self):
-        return self.relation_id
-
-
-# 任务
-class Mission(models.Model):
-    description = models.CharField(u'任务描述', max_length=200)
-    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
-    score = models.IntegerField(u'得分', default=0)
-    examine = models.ForeignKey('Examine', verbose_name=u'测试')
-
-    class Meta:
-        verbose_name = u'任务'
-        verbose_name_plural = verbose_name
-
-    def __unicode__(self):
-        return self.score
-
-
-# 在线编程
-class CodeExcise(models.Model):
-    lang_type = (
-        ('1', 'python'),
-        ('2', 'PHP'),
-        ('3', 'Java'),
-        ('4', 'Android'),
-        ('5', 'iOS'),
-        # 有需求后面再添加
-    )
-    description = models.TextField(u'描述')
-    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
-    lang_type = models.CharField(u'语言类型', choices=lang_type, max_length=2)
-    result = models.TextField(u'结果')
-    score = models.IntegerField(u'得分', default=0)
-    study_point = models.IntegerField(u'学力点', default=0)
-    examine = models.ForeignKey('Examine', verbose_name=u'测试')
-
-    class Meta:
-        verbose_name = u'在线编程'
-        verbose_name_plural = verbose_name
-
-    def __unicode__(self):
-        return self.score
-
-
-# 小测试
-class Quiz(models.Model):
-    quiz_type = (
-        ('1', 'shoos'),
-        ('2', 'fill field'),
-    )
-    item_list = (
-        ('1', 'JSON'),
-        ('2', 'HTML'),
-    )
-    question = models.TextField(u'问题')
-    quiz_type = models.CharField(u'测试类型', choices=quiz_type, max_length=1)
-    item_list = models.CharField(u'项目清单', choices=item_list, max_length=1)
-    result = models.CharField(u'结果', max_length=200)
-    paper = models.ForeignKey('Paper', verbose_name=u'试卷')
-
-    class Meta:
-        verbose_name = u'小测试'
-        verbose_name_plural = verbose_name
-
-    def __unicode__(self):
-        return self.result
-
-
-# 试卷
-class Paper(models.Model):
-    description = models.TextField(u'描述')
-    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
-    score = models.IntegerField(u'得分', default=0)
-    study_point = models.IntegerField(u'学力点', default=0)
-    examine = models.ForeignKey('Examine', verbose_name=u'测试')
-
-    class Meta:
-        verbose_name = u'试卷'
-        verbose_name_plural = verbose_name
-        ordering = ['-date_publish']
-
-    def __unicode__(self):
-        return self.score
-
-
-# 课后作业
-class Homework(models.Model):
-    description = models.TextField(u'描述')
-    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
-    score = models.IntegerField(u'得分', default=0)
-    study_point = models.IntegerField(u'学力点', default=0)
-    examine = models.ForeignKey('Examine', verbose_name=u'测试')
-
-    class Meta:
-        verbose_name = u'课后作业'
-        verbose_name_plural = verbose_name
-        ordering = ['-date_publish']
-
-    def __unicode__(self):
-        return self.score
-
-
 # 学生
 class Student(models.Model):
     user = models.OneToOneField('UserProfile', verbose_name=u'学生信息')
@@ -746,3 +455,294 @@ class Student(models.Model):
 
     def __unicode__(self):
         return self.user.username
+
+
+# # 计划事项
+# class PlanningItem(models.Model):
+#     start_date = models.DateTimeField(u'开始时间', auto_now_add=True, null=True, blank=True)
+#     end_date = models.DateTimeField(u'结束时间', null=True, blank=True)
+#
+#     class Meta:
+#         verbose_name = u'计划事项'
+#         verbose_name_plural = verbose_name
+#
+#     def __unicode__(self):
+#         return '%s, %s' % (self.start_date, self.end_date)
+#
+#
+# # 计划
+# class Planning(models.Model):
+#     date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+#     is_active = models.BooleanField(u'状态', default=True)
+#     version = models.IntegerField(u'版本')
+#     planning_item = models.ManyToManyField('PlanningItem', verbose_name=u'计划事件')
+#
+#     class Meta:
+#         verbose_name = u'计划'
+#         verbose_name_plural = verbose_name
+#         ordering = ['-date_publish']
+#
+#     def __unicode__(self):
+#         return '%s, %s' % (self.version, self.date_publish)
+
+
+# # 设置
+# class Setting(models.Model):
+#     """
+#     学过的课程用时 = 课程用时 × 乘积参数 + 天数调整
+#     """
+#     score_pass_line = models.IntegerField(u'课程通过分数线', default=60)
+#     course_days_rule = models.IntegerField(u'课程用时', null=True, blank=True)
+#     know_course_percent = models.FloatField(u'乘积参数', null=True, blank=True)
+#     know_course_value = models.IntegerField(u'天数调整', null=True, blank=True)
+#
+#     class Meta:
+#         verbose_name = u'设置'
+#         verbose_name_plural = verbose_name
+#
+#     def __unicode__(self):
+#         return u'学过的课程用时： %s' % (self.course_days_rule * self.course_days_rule + self.know_course_value)
+#
+#
+# # 消息日志
+# class Log(models.Model):
+#     action_type = (
+#         ('1', u'系统消息'),
+#         ('2', u'课程消息回复'),
+#         ('3', u'博客消息回复'),
+#     )
+#     userA = models.IntegerField(u'用户A')
+#     userB = models.IntegerField(u'用户B', null=True, blank=True)
+#     action_type = models.CharField(u'类型', choices=action_type, max_length=1, blank=True)
+#     action_id = models.IntegerField(u'编号', null=True, blank=True)
+#     date_action = models.DateTimeField(u'日期', auto_now_add=True)
+#
+#     class Meta:
+#         verbose_name = u'日志'
+#         verbose_name_plural = verbose_name
+#         ordering = ['-date_action']
+#
+#     def __unicode__(self):
+#         return self.action_type
+#
+#
+# # 我的消息
+# class MyMessage(models.Model):
+#     action_type = (
+#         ('1', u'系统消息'),
+#         ('2', u'课程消息回复'),
+#         ('3', u'博客消息回复'),
+#     )
+#     userA = models.IntegerField(u'用户A')
+#     userB = models.IntegerField(u'用户B', null=True, blank=True)
+#     action_type = models.CharField(u'类型', choices=action_type, max_length=1, blank=True)
+#     action_id = models.IntegerField(u'编号', null=True, blank=True)
+#     date_action = models.DateTimeField(u'日期', auto_now_add=True)
+#     is_new = models.BooleanField(u'是否为最新', default=True)
+#
+#     class Meta:
+#         verbose_name = u'我的消息'
+#         verbose_name_plural = verbose_name
+#         ordering = ['is_new']
+#
+#     def __unicode__(self):
+#         return self.action_type
+#
+#
+# # 测试记录
+# class ExamineRecord(models.Model):
+#     is_active = models.BooleanField(u'状态', default=True)
+#     score = models.IntegerField(u'得分', default=0)
+#     study_point = models.IntegerField(u'学力点', default=0)
+#     date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+#
+#     class Meta:
+#         verbose_name = u'测试记录'
+#         verbose_name_plural = verbose_name
+#         ordering = ['-date_publish']
+#
+#     def __unicode__(self):
+#         return self.score
+#
+#
+# # 任务记录
+# class MissionRecord(models.Model):
+#     date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
+#     score = models.IntegerField(u'得分', default=0)
+#     examine_record = models.ForeignKey('ExamineRecord', verbose_name=u'测试记录')
+#
+#     class Meta:
+#         verbose_name = u'任务记录'
+#         verbose_name_plural = verbose_name
+#
+#     def __unicode__(self):
+#         return self.score
+#
+#
+# # 课后作业记录
+# class HomeworkRecord(models.Model):
+#     upload_file = models.CharField(u'课后作业记录', max_length=200)
+#     examine_record = models.ForeignKey('ExamineRecord', verbose_name=u'测试记录')
+#
+#     class Meta:
+#         verbose_name = u'课后作业记录'
+#         verbose_name_plural = verbose_name
+#
+#     def __unicode__(self):
+#         return self.upload_file
+#
+#
+# # 在线编程记录
+# class CodeExciseRecord(models.Model):
+#     result = models.TextField(u'结果')
+#     examine_record = models.ForeignKey('ExamineRecord', verbose_name=u'测试记录')
+#
+#     class Meta:
+#         verbose_name = u'在线编程记录'
+#         verbose_name_plural = verbose_name
+#
+#     def __unicode__(self):
+#         return self.result
+#
+#
+# # 小测试记录
+# class QuizRecord(models.Model):
+#     type = (
+#         ('1', 'shoos'),
+#         ('2', 'fill field'),
+#     )
+#     type = models.CharField(u'小测试记录', choices=type, max_length=1)
+#     result = models.CharField(u'结果', max_length=200)
+#     examine_record = models.ForeignKey('ExamineRecord', verbose_name=u'测试纪录')
+#
+#     class Meta:
+#         verbose_name = u'小测试纪录'
+#         verbose_name_plural = verbose_name
+#
+#     def __unicode__(self):
+#         return self.result
+#
+#
+# # 测试
+# class Examine(models.Model):
+#     examine_type = (
+#         ('1', 'homeword'),  # 课后作业
+#         ('2', 'paper'),  # 试卷
+#         ('3', 'code_excise'),  # 在线编程
+#         ('4', 'mission'),  # 任务
+#     )
+#     relation_type = (
+#         ('1', 'lesson'),  # 课时
+#         ('2', 'course'),  # 课程
+#         ('3', 'mission'),  # 任务
+#     )
+#     examine_type = models.CharField(u'测试类型', choices=examine_type, max_length=1)
+#     relation_type = models.CharField(u'关联类型', choices=relation_type, max_length=1)
+#     relation_id = models.IntegerField(u'关联id')
+#     is_active = models.BooleanField(u'状态', default=True)
+#
+#     class Meta:
+#         verbose_name = u'测试'
+#         verbose_name_plural = verbose_name
+#
+#     def __unicode__(self):
+#         return self.relation_id
+#
+#
+# # 任务
+# class Mission(models.Model):
+#     description = models.CharField(u'任务描述', max_length=200)
+#     date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+#     score = models.IntegerField(u'得分', default=0)
+#     examine = models.ForeignKey('Examine', verbose_name=u'测试')
+#
+#     class Meta:
+#         verbose_name = u'任务'
+#         verbose_name_plural = verbose_name
+#
+#     def __unicode__(self):
+#         return self.score
+#
+#
+# # 在线编程
+# class CodeExcise(models.Model):
+#     lang_type = (
+#         ('1', 'python'),
+#         ('2', 'PHP'),
+#         ('3', 'Java'),
+#         ('4', 'Android'),
+#         ('5', 'iOS'),
+#         # 有需求后面再添加
+#     )
+#     description = models.TextField(u'描述')
+#     date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+#     lang_type = models.CharField(u'语言类型', choices=lang_type, max_length=2)
+#     result = models.TextField(u'结果')
+#     score = models.IntegerField(u'得分', default=0)
+#     study_point = models.IntegerField(u'学力点', default=0)
+#     examine = models.ForeignKey('Examine', verbose_name=u'测试')
+#
+#     class Meta:
+#         verbose_name = u'在线编程'
+#         verbose_name_plural = verbose_name
+#
+#     def __unicode__(self):
+#         return self.score
+#
+#
+# # 小测试
+# class Quiz(models.Model):
+#     quiz_type = (
+#         ('1', 'shoos'),
+#         ('2', 'fill field'),
+#     )
+#     item_list = (
+#         ('1', 'JSON'),
+#         ('2', 'HTML'),
+#     )
+#     question = models.TextField(u'问题')
+#     quiz_type = models.CharField(u'测试类型', choices=quiz_type, max_length=1)
+#     item_list = models.CharField(u'项目清单', choices=item_list, max_length=1)
+#     result = models.CharField(u'结果', max_length=200)
+#     paper = models.ForeignKey('Paper', verbose_name=u'试卷')
+#
+#     class Meta:
+#         verbose_name = u'小测试'
+#         verbose_name_plural = verbose_name
+#
+#     def __unicode__(self):
+#         return self.result
+#
+#
+# # 试卷
+# class Paper(models.Model):
+#     description = models.TextField(u'描述')
+#     date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+#     score = models.IntegerField(u'得分', default=0)
+#     study_point = models.IntegerField(u'学力点', default=0)
+#     examine = models.ForeignKey('Examine', verbose_name=u'测试')
+#
+#     class Meta:
+#         verbose_name = u'试卷'
+#         verbose_name_plural = verbose_name
+#         ordering = ['-date_publish']
+#
+#     def __unicode__(self):
+#         return self.score
+#
+#
+# # 课后作业
+# class Homework(models.Model):
+#     description = models.TextField(u'描述')
+#     date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+#     score = models.IntegerField(u'得分', default=0)
+#     study_point = models.IntegerField(u'学力点', default=0)
+#     examine = models.ForeignKey('Examine', verbose_name=u'测试')
+#
+#     class Meta:
+#         verbose_name = u'课后作业'
+#         verbose_name_plural = verbose_name
+#         ordering = ['-date_publish']
+#
+#     def __unicode__(self):
+#         return self.score

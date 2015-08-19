@@ -2,16 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from django.core.paginator import Paginator, InvalidPage, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
-from models import *
 from django.conf import settings
+from models import *
 
 logger = logging.getLogger('maiziedu.home_views')
-
-
-# 全局信息
-def global_setting(request):
-    pass
 
 
 # 首页
@@ -28,39 +24,29 @@ def index(request):
         # 友情链接
         link_list = Links.objects.all()
         # 网站导航
-        home_page = settings.HOME_PAGE
-        about_us = settings.ABOUT_US
-        contact_us = settings.CONTACT_US
-        join_us = settings.JOIN_US
+        home_page = settings.HOME_PAGE  # 网站首页
+        about_us = settings.ABOUT_US  # 关于我们
+        contact_us = settings.CONTACT_US  # 联系我们
+        join_us = settings.JOIN_US  # 加入我们
         # 关注我们
-        weibo_sina = settings.WEIBO_SINA
-        weibo_tencent = settings.WEIBO_TENCENT
-        weixin = settings.WEIXIN
+        weibo_sina = settings.WEIBO_SINA  # 新浪微博
+        weibo_tencent = settings.WEIBO_TENCENT  # 腾讯微博
+        weixin = settings.WEIXIN  # 官方微信
+        # 课程
+        new_add = Course.objects.order_by('-date_publish')  # 最新课程
+        most_play = Course.objects.order_by('-play_count')  # 最多播放
+        hot_favorite = Course.objects.order_by('-favorite_count')  # 最具人气
         return render(request, 'home/index.html', locals())
     except Exception as e:
         logger.error(e)
 
 
-# 搜索
-def search_command(request):
-    pass
-
-
-# 课程
-def course(request):
-    pass
-
-
-# 名师风采及详细页
-def teacher(request):
-    pass
-
-
-# 推荐阅读
-def suggerst_read(request):
-    pass
-
-
-# 底部
-def bottom(request):
-    pass
+# 分页代码
+def get_page(request, article_list):
+    paginator = Paginator(article_list, 8)  # 一页最多显示8们课程
+    try:
+        page = int(request.GET.get('page', 1))
+        article_list = paginator.page(page)
+    except (EmptyPage, InvalidPage, PageNotAnInteger):
+        article_list = paginator.page(1)  # 出现异常就返回第一页
+    return article_list
