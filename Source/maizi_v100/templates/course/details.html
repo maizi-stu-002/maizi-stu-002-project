@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load course_filter %}
+{% load staticfiles %}
+<script type="text/javascript" src={% static "js/course.js" %}></script>
+{% block content %}
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href={% url "index" %}>首页</a></li>
+      <li><a href={% url "course" %}>课程</a></li>
+      <li class="active">{{course.name}}</li>
+    </ol>
+  </div>
+  <div class="container">
+    <div class="course-stage">
+      <div class="course-stage-lead">
+        <dl class="course-stage-dl">
+          <dt>{{course.name}}</dt>
+          <dd>{{course.description}}</dd>
+        </dl>
+        <div class="row">
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <ul class="course-data">
+              <li><i class="v5-icon v5-icon-student"></i></li>
+              <li>{{ course.getUserCount }}学员</li>
+            </ul>
+            <ul class="course-data">
+              <li><i class="v5-icon v5-icon-time"></i></li>
+              <li>{{ course.getTimeToSpend|getHourMinute}}</li>
+            </ul>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <ul class="course-btn">
+              <li><button type="button" class="btn btn-micv5 btn-xlg">体验学习</button></li>
+              {# <li><a class="link-default">课程详细介绍</a></li> #}
+            </ul>
+          </div>
+        </div>
+      </div>
+      {# one stage start #}
+      {% for stage in course.stage_set.all  %}
+      <section >
+        
+        <dl class="course-stage-dl">
+          <dt>{{stage.name}}</dt>
+          <dd>{{stage.description}}</dd>
+        </dl>
+        <div class="row course-stage-item">
+        {% for courseOfStage in stage.course_set.all %}
+          <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+            <div class="lead-img"><a href="" title={{ courseOfStage.description}}><img src={{ courseOfStage.avatarUrl.url }}></a></div>
+
+            <div class="artc-bt">
+              <h3><a href="" title={{ courseOfStage.name }}>{{ courseOfStage.name }}</a></h3>
+              <p><i class="v5-icon v5-icon-stime"></i>{{ courseOfStage.getTimeToSpend|getHourMinute }}</p>
+            </div>
+          </article>
+        {% endfor %}
+
+        </div>
+      </section>
+      {% endfor %}
+      {# one stage end #}
+    </div>
+  </div>
+  
+{% endblock content %}

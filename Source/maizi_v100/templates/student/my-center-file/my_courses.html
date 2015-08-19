@@ -1,0 +1,204 @@
+{% extends 'student/my-center-file/student_base.html' %}
+{% load staticfiles %}
+{% block title %}<title>个人中心-我的课程</title>{% endblock %}
+{% block main_content %}
+  <div class="container uc-boxb">
+    <div class="uc-h1">职业课程</div>
+    <ul class="row my-course">
+      <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <section style="background-color:#A9BE32;">
+          <a href="">
+          	<img src="{% static "images/course/android.png"%}">
+            <article>
+              <h3>Android应用开发工程师</h3>
+              <p>班级排名：5/24</p>
+            </article>
+          </a>
+          <a href="" class="opt">继续学习</a>
+        </section>
+      </li>
+      <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+      	<section style="background-color:#E68E38;">
+          <a href="">
+          	<img src="{% static "images/course/ios.png"%}">
+            <article>
+              <h3>iOS开发工程师</h3>
+              <p>班级排名：5/24</p>
+            </article>
+          </a>
+          <a href="" class="opt">继续学习</a>
+        </section>
+      </li>
+      <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+      	<section style="background-color:#429FDA;">
+          <a href="">
+          	<img src="{% static "images/course/drupal.png"%}">
+            <article>
+              <h3>Drupal网站开发工程师</h3>
+              <p>班级排名：5/24</p>
+            </article>
+          </a>
+          <a href="" class="opt">继续学习</a>
+        </section>
+      </li>
+      <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+      	<section style="background-color:#D3A21F;">
+          <a href="">
+          	<img src="{% static "images/course/cocos.png"%}">
+            <article>
+              <h3>Cocos2D-X手机游戏 开发工程师</h3>
+              <p>班级排名：5/24</p>
+            </article>
+          </a>
+          <a href="" class="opt">继续学习</a>
+        </section>
+      </li>
+      <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+      	<section style="background-color:#EE5C5C;">
+          <a href="">
+          	<img src="{% static "images/course/windows8.png"%}">
+            <article>
+              <h3>WindowsPhone应用 开发工程师</h3>
+              <p>班级排名：5/24</p>
+            </article>
+          </a>
+          <a href="" class="opt">继续学习</a>
+        </section>
+      </li>
+    </ul>
+    <div class="uc-h1">其他课程</div>
+    <div class="row other-course">
+      <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <div class="lead-img"><img src="{% static "test/8.jpg"%}"><a href="" class="opt">继续学习</a></div>
+        <div class="artc-bt">
+          <h3><a href="" title="从Google 2014 I/O 大会看Android">从Google 2014 I/O 大会看Android L</a></h3>
+          <p>已观看到第三章</p>
+        </div>
+      </article>
+      <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <div class="lead-img"><img src="{% static "test/9.jpg"%}"><a href="" class="opt">继续学习</a></div>
+        <div class="artc-bt">
+          <h3><a href="" title="从Google 2014 I/O 大会看Android">从Google 2014 I/O 大会看Android L</a></h3>
+          <p>已观看到第三章</p>
+        </div>
+      </article>
+      <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <div class="lead-img"><img src="{% static "test/10.jpg"%}"><a href="" class="opt">继续学习</a></div>
+        <div class="artc-bt">
+          <h3><a href="" title="从Google 2014 I/O 大会看Android">从Google 2014 I/O 大会看Android L</a></h3>
+          <p>已观看到第三章</p>
+        </div>
+      </article>
+      <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <div class="lead-img"><img src="{% static "test/8.jpg"%}"><a href="" class="opt">继续学习</a></div>
+        <div class="artc-bt">
+          <h3><a href="" title="从Google 2014 I/O 大会看Android">从Google 2014 I/O 大会看Android L</a></h3>
+          <p>已观看到第三章</p>
+        </div>
+      </article>
+      <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <div class="lead-img"><img src="{% static "test/8.jpg"%}"><a href="" class="opt">继续学习</a></div>
+        <div class="artc-bt">
+          <h3><a href="" title="从Google 2014 I/O 大会看Android">从Google 2014 I/O 大会看Android L</a></h3>
+          <p>已观看到第三章</p>
+        </div>
+      </article>
+    </div>
+  </div>
+  <div class="v5-footer">
+    <div class="container">
+      <div class="v5-footer-container">
+        <div class="v5-footer-bottom">
+          <p>© 2012-2014 maiziedu.com | 服务条款 | 蜀ICP备13014270号-4 Version 4.0.1 release20140721.1</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--登录-->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="loginModalLabel">登录</h4>
+      </div>
+      <div class="modal-body">
+        <section class="box-login v5-input-txt" id="box-login">
+          <ul>
+            <li class="form-group has-error"><input type="text" class="form-control" placeholder="请输入邮箱账号/手机号"></li>
+            <li class="form-group"><input type="password" class="form-control" placeholder="请输入密码"></li>
+          </ul>
+          <p class="good-tips"><a href="#" data-toggle="modal" data-target="#forgetpswModal" id="btnForgetpsw" class="fr">忘记密码？</a>还没有账号？<a href="" data-toggle="modal" data-target="#registerModal" id="btnRegister">立即注册</a></p>
+          <div>
+            <button type="button" class="btn btn-micv5 btn-block">登录</button>
+          </div>
+          <div class="tips-error bg-danger">错误提示</div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+<!--找回密码-->
+<div class="modal fade" id="forgetpswModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="forgetpswModalLabel">找回密码</h4>
+      </div>
+      <div class="modal-body">
+        <section class="box-forgetpsw v5-input-txt" id="box-forgetpsw">
+          <ul>
+            <li class="form-group has-error"><input type="text" class="form-control" placeholder="请输入注册邮箱账号或手机号码"></li>
+          </ul>
+          <div>
+            <button type="button" class="btn btn-micv5 btn-block">提交</button>
+          </div>
+          <div class="tips-error bg-danger">错误提示</div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--注册-->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="registerModalLabel">注册</h4>
+      </div>
+      <div class="modal-body">
+        <section class="box-register v5-input-txt" id="box-register">
+          <ul class="register-tabs" role="tablist">
+            <li class="active"><a href="#register-email" role="tab" data-toggle="tab">邮箱注册</a></li>
+            <li><a href="#register-mobile" role="tab" data-toggle="tab">手机注册</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="register-email">
+            	<div class="form-group"><input type="text" class="form-control" placeholder="请输入邮箱账号"></div>
+              <div class="form-group"><input type="password" class="form-control" placeholder="请输入密码"></div>
+              <div class="form-group cf"><input type="text" class="form-control form-control-captcha fl" placeholder="请输入验证码"><span class="v5-yzm fr"><a href=""><img src="{% static "test/yzm.jpg"%}">换一张</a></span></div>            	
+            </div>
+            <div class="tab-pane" id="register-mobile">
+            	<div class="form-group cf"><input type="text" class="form-control form-control-phone fl" placeholder="请输入手机号"><span class="fr"><button type="button" class="btn btn-micv5 btn-send">发送验证码</button></span></div>
+              <div class="form-group"><input type="text" class="form-control" placeholder="请输入短信验证码"></div>
+              <div class="form-group"><input type="password" class="form-control" placeholder="请输入密码"></div>
+              <div class="form-group cf"><input type="text" class="form-control form-control-captcha fl" placeholder="请输入验证码"><span class="v5-yzm fr"><a href=""><img src="{% static "test/yzm.jpg"%}">换一张</a></span></div>
+            </div>
+          </div>
+          <p class="good-tips">已经有账号？<a href="#" data-toggle="modal" data-target="#loginModal" id="btnLogin">立即登录</a></p>
+          <div>
+            <button type="button" class="btn btn-micv5 btn-block">注册并登录</button>
+          </div>
+          <div class="tips-error bg-danger">错误提示</div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
