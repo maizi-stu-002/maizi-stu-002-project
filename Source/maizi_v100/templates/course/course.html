@@ -13,7 +13,7 @@
       <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
         <section style="background-color:
         {% cycle '#A9BE32' '#E68E38' '#429FDA' '#D3A21F' '#EE5C5C' '#35AC56' %};">
-          <a href="{% url 'course' %}{{ course.symbol }}/">
+          <a href="{% url 'course_stage' course.symbol %}">
             <img src="{% static course.imgurl %}">
             <article>
               <h3>{{ course.name }}</h3>

@@ -282,7 +282,7 @@ class CareerCourse(models.Model):
 
     def getUserCount(self):
         # 所有学习该课程的学生人数
-        return UserLearnLesson.objects.filter(lesson__in=self.getLessons()).count()
+        return UserLearnLesson.objects.filter(lesson__in=self.getLessons()).values('student').distinct().count()
 
     def getTimeToSpend(self):
         # 职业课程下所有视频累计时间
@@ -293,7 +293,7 @@ class CareerCourse(models.Model):
     class Meta:
         verbose_name = u'职业课程'
         verbose_name_plural = verbose_name
-        ordering = ("symbol",)
+        ordering = ("name","id")
 
     def __unicode__(self):
         return '%s, %s' % (self.name, self.total_price)
@@ -366,7 +366,7 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = u'课时'
         verbose_name_plural = verbose_name
-
+        ordering = ('index','name')
     def __unicode__(self):
         return self.name
 

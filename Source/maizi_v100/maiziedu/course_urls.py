@@ -5,12 +5,16 @@ from django.contrib import admin
 from course_views import *
 urlpatterns = [
 	# url(r'course/(?P<pageId>\d{1,2})?/?$'
-	url(r'^course/$',course,name="course"),
+	url(r'^course/$',CourseListView.as_view(),name="course_list"),
 	url(r'^course/',
 		include([
-			url(r'^(?P<name>[\w-]+)/$',
-				CourseView.as_view()),
-
+			url(r'^(?P<name>[\w-]+)/',
+				include([
+					url(r'^$', CourseStageView.as_view(), name="course_stage"),
+					url(r'^(?P<cid>\d+)-(?P<lid>\d+)/$', CoursePlayView.as_view(), name="course_play"),
+				])
+				),
+			url(r'^(\d+)/recent/play/$', RecentPlayView.as_view(), name="recent_play"),
 		])
 	),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
