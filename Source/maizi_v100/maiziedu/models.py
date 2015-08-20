@@ -128,8 +128,8 @@ class BadgeDict(models.Model):
 # 我的课程
 class MyCourse(models.Model):
     course_type = (
-        ('1', 'course'),  # 其它课程
-        ('2', 'career_course'),  # 职业课程
+        ('1', u'其它课程'),
+        ('2', u'职业课程'),
     )
     course_type = models.CharField(u'课程类型', choices=course_type, max_length=1)
     course_id = models.IntegerField(u'课程id')
@@ -204,22 +204,22 @@ class Keywords(models.Model):
 # 用户购买信息
 class UserPurchase(models.Model):
     pay_type = (  # 购买类型
-                  ('1', 'VIP'),  # vip
-                  ('2', 'CareerCourse'),  # 职业课程
+                  ('1', 'VIP'),
+                  ('2', u'职业课程'),
     )
     pay_stage = (  # 购买阶段
-                   ('0', 'all'),  # 所有阶段
-                   ('1', u'阶段一'),  # 阶段一
-                   ('2', u'其它阶段'),  # 其它阶段
+                   ('0', u'所有阶段'),
+                   ('1', u'阶段一'),
+                   ('2', u'其它阶段'),
     )
     pay_way = (  # 支付方式
-                 ('1', 'alipay'),  # 支付宝
-                 ('2', 'kuaiqian'),  # 快钱
+                 ('1', u'支付宝'),
+                 ('2', u'快钱'),
     )
 
     pay_status = (  # 支付状态
-                    ('1', 'success'),  # 成功
-                    ('2', 'failed'),  # 失败
+                    ('1', u'成功'),
+                    ('2', u'失败'),
     )
     pay_price = models.DecimalField(u'购买价格', max_digits=5, decimal_places=2)
     ording_coding = models.CharField(u'预定语言', max_length=200)
@@ -375,7 +375,7 @@ class UserLearnLesson(models.Model):
         unique_together = ('student', 'lesson')
 
     def __unicode__(self):
-        return self.student.user.username + "-" + self.lesson.name
+        return '%s - %s' % (self.student.user.username, self.lesson.name)
 
 
 # 用户收藏的课程
@@ -390,6 +390,26 @@ class UserFavoriteCourse(models.Model):
 
     def __unicode__(self):
         return self.course
+
+
+# 推荐阅读
+class RecommendRead(models.Model):
+    category = (
+        ('1', u'官方活动'),
+        ('2', u'技术交流'),
+        ('3', u'开发者资讯'),
+    )
+    title = models.CharField(u'标题', max_length=50)
+    callback_url = models.URLField(u'链接')
+    date_publish = models.DateTimeField(u'发布时间', auto_now_add=True)
+    category = models.CharField(u'分类', choices=category, max_length=1)
+
+    class Meta:
+        verbose_name = u'推荐阅读'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.title
 
 
 # 战略合作

@@ -15,19 +15,25 @@ def index(request):
     try:
         # 媒体信息
         media_url = settings.MEDIA_URL
+
         # 广告
         ad_list = Ad.objects.all()[:6]
+
         # 教师
         teacher_list = Teacher.objects.all()
+
         # 战略合作
         strategic_list = Strategic.objects.all()
+
         # 友情链接
         link_list = Links.objects.all()
+
         # 网站导航
         home_page = settings.HOME_PAGE  # 网站首页
         about_us = settings.ABOUT_US  # 关于我们
         contact_us = settings.CONTACT_US  # 联系我们
         join_us = settings.JOIN_US  # 加入我们
+
         # 关注我们
         weibo_sina = settings.WEIBO_SINA  # 新浪微博
         weibo_tencent = settings.WEIBO_TENCENT  # 腾讯微博
@@ -44,6 +50,12 @@ def index(request):
         hot_favorite = Course.objects.order_by('-favorite_count')  # 最具人气
         # 最具人气分页
         hot_favorite = get_page(request, hot_favorite)
+
+        # 推荐阅读
+        official_activity = RecommendRead.objects.filter(category='1').order_by('-date_publish')[:5]  # 官方活动
+        technology_exchange = RecommendRead.objects.filter(category='2').order_by('-date_publish')[:5]  # 技术交流
+        developer_information = RecommendRead.objects.filter(category='3').order_by('-date_publish')[:5]  # 开发者资讯
+
         return render(request, 'home/index.html', locals())
     except Exception as e:
         logger.error(e)

@@ -80,6 +80,11 @@ admin.site.register(UserLearnLesson)  # 用户学习课时
 admin.site.register(UserFavoriteCourse)  # 用户收藏的课程
 
 
+class RecommendReadAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'date_publish')
+admin.site.register(RecommendRead, RecommendReadAdmin)  # 推荐阅读
+
+
 class StrategicAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'date_publish')
 admin.site.register(Strategic, StrategicAdmin)  # 战略合作
