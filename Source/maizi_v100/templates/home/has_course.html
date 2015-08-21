@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}个人中心-他的课程（教师）{% endblock %}
+{% block main_content %}
+<div class="container-fluid container-banner container-banner-a">
+    <div class="container container-uinfo">
+        <div class="header-uinfo">
+            <div class="uinfo-head"><img src="{{ media_url }}{{ teacher.user.avatar_url }}"></div>
+            <div class="uinfo-con">
+                <p>{{ teacher.user.last_name }}{{ teacher.user.first_name }}</p>
+
+                <p>{{ teacher.position }}</p>
+
+                <p>简介：{{ teacher.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container uc-boxb">
+    <div class="uc-h1">他的课程</div>
+    <ul class="row my-course">
+        {% for course in course_list %}
+        <li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+            <section style="background-color:#A9BE32;">
+                <a href="">
+                    <img src="{{ media_url }}{{ course.img_url }}">
+                    <article>
+                        <h3>{{ course.name }}</h3>
+{#                         <p>班级排名：5/24</p>#}
+                    </article>
+                </a>
+                <a href="" class="opt">查看</a>
+            </section>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

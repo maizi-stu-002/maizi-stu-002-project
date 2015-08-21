@@ -13,7 +13,7 @@
                 {% for teacher in teacher_list %}
                 <li>
                     <dl>
-                        <dt><a href="" style="border-left-color:#00A388;"><img src="{{ media_url }}{{ teacher.user.avatar_thumbnail_url }}"></a>
+                        <dt><a href="{% url 'has_course' teacher.id %}" style="border-left-color:#00A388;"><img src="{{ media_url }}{{ teacher.user.avatar_thumbnail_url }}"></a>
                         </dt>
                         <dd>
                             <h2>{{ teacher.user.last_name }}{{ teacher.user.first_name }}</h2>

@@ -248,6 +248,7 @@ class CareerCourse(models.Model):
     img_url = models.ImageField(u'图片路径', upload_to='career_course/%Y/%m',
                                 default='career_course/default.png', max_length=200)
     symbol = models.CharField(u'代号', max_length=10, blank=False, null=True)
+    background_color = models.CharField(u'课程背景颜色', max_length=10, default='#9d7cd4')
     purchase = models.ForeignKey(UserPurchase, verbose_name=u'用户购买', null=True, blank=True)
     # planning = models.ForeignKey(Planning, verbose_name=u'课程计划', null=True, blank=True)
 
