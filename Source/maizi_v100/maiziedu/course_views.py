@@ -18,12 +18,18 @@ class CourseListView(ListView):
     model = CareerCourse
 
     def get(self, request):
+        try:
+            assert request.is_ajax()
+        except AssertionError:
+            template_name = "course.html"
+        else:
+            template_name = "course_ajax.html"
         # 使用通用视图
         # paginate_queryset(queryset, page_size)
         # Returns a 4-tuple containing (paginator, page, object_list,
         # is_paginated).
         page = self.paginate_queryset(self.get_queryset(), 6)[1]
-        return render(request, "course.html", locals())
+        return render(request, template_name, locals())
 
 
 # 课程阶段

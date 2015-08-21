@@ -19,8 +19,7 @@
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 course-play-box" style="background-color: #000">
             <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" autoplay width="100%" height="100%"
-                poster
-                data-setup="{}">
+                poster data-setup="{}">
               <source src="{{ lesson_to_play.video_url}}" type='video/mp4'/>
               <track kind="subtitles" src="demo.captions.vtt" srclang="en" label="English"></track><!-- Tracks need an ending tag thanks to IE9 -->
               <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
@@ -30,14 +29,17 @@
             <h1>课程章节</h1>
             <div class="playlist scroll-pane">
               <ul>
+              {% with course.stage.career_course.symbol as symbol %}
+                  
               {% for lesson in course.lesson_set.all %}
                 
-                <li><a href="{% url 'course_play' course.stage.career_course.symbol course.id lesson.id %}"
+                <li><a href="{% url 'course_play' symbol course.id lesson.id %}"
                 {% ifequal lesson lesson_to_play  %} 
                   style="background-color:#2D3E50;color:#1BBC9B;"
                 {% endifequal %}
                 >{{ lesson.name }}</a></li>
               {% endfor %}
+              {% endwith %}
               </ul>
             </div>
           </div>

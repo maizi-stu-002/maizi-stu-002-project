@@ -1,8 +1,9 @@
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.conf import settings
-from django.contrib import admin
 from course_views import *
+
+
 urlpatterns = [
 	# url(r'course/(?P<pageId>\d{1,2})?/?$'
 	url(r'^course/$',CourseListView.as_view(),name="course_list"),
@@ -15,6 +16,6 @@ urlpatterns = [
 				])
 				),
 			url(r'^(\d+)/recent/play/$', RecentPlayView.as_view(), name="recent_play"),
-		])
+		]),
 	),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

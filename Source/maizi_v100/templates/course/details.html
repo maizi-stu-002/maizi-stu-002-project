@@ -44,13 +44,15 @@
           <dd>{{stage.description}}</dd>
         </dl>
         <div class="row course-stage-item">
+        {% with stage.career_course.symbol as symbol %}          
         {% for course in stage.course_set.all %}
           <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
             <div class="lead-img"><a href="
                 {% if request.user.is_authenticated %}             
                 {% url 'recent_play' course.id %}?stageid={{course.stage.id}}
                 {% else %}
-                {% url 'course_play' course.stage.career_course.symbol course.id course.lesson_set.all.0.id %}
+                {% url 'course_play' symbol course.id course.lesson_set.all.0.id as course_play_url %}
+                {{ course_play_url }}
                 {% endif %}
               "
             title={{ course.description}}><img src={{ course.avatarUrl.url }}></a></div>
@@ -59,7 +61,7 @@
                 {% if request.user.is_authenticated %}             
                 {% url 'recent_play' course.id %}?stageid={{course.stage.id}}
                 {% else %}
-                {% url 'course_play' course.stage.career_course.symbol course.id course.lesson_set.all.0.id %}
+                {{ course_play_url }}
                 {% endif %}
               "
               title={{ course.name }}>{{ course.name }}</a></h3>
@@ -67,12 +69,14 @@
             </div>
           </article>
         {% endfor %}
-
+        {% endwith %}
         </div>
       </section>
+      {% empty %}
+      课程为空
       {% endfor %}
       {# one stage end #}
     </div>
   </div>
-  
+
 {% endblock content %}
