@@ -83,11 +83,23 @@ $(function(){
   //点击收藏
   $('.house').on('click', function (event) {
     event.preventDefault();
-    var _thisI = $(this).children('i');
-    var _thisIclass = _thisI.hasClass('v5-icon-saved');
-    _thisI.toggleClass('v5-icon-saved');
-    var _text = (_thisIclass == true) ? '收藏' : '已收藏';
-    $(this).children('span').text(_text);
+    var course_id = $(".playlist a").attr("courseId")
+    $.ajax({
+         cache: false,
+         type: "get",
+         url: "/course/" + course_id + "/favorite/update",
+         async: true,
+         success: function (data) {
+          var $house = $(".house");
+            if (data=="houseok"){
+              $house.children("i").addClass("v5-icon-saved");
+              $house.children("span").text('已收藏');
+            }else if (data=="housecancel"){
+              $house.children("i").removeClass("v5-icon-saved");
+              $house.children("span").text('收藏');
+           }
+         }
+      });        
   });
   
   $('.plan-tip').hover(function() {

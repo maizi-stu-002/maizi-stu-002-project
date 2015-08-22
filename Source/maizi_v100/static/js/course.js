@@ -32,8 +32,9 @@ var courselistAnimate = function(data){
 			$.get("/course/", {'page':$btn.text()}, function(data, status){
 				if(status==="success"){
 					courselistAnimate(data);
-					$('.page-num').removeClass('active');
-					$btn.addClass("active");
+					// $('.page-num').removeClass('active');
+					// $btn.addClass("active");
+					$btn.addClass("active").parent().siblings().children(".page-num").removeClass("active")
 				}
 			});
 		}		
@@ -71,4 +72,5 @@ var courselistAnimate = function(data){
 			});
 		}
 	});
+
 });

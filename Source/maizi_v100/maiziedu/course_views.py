@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import CareerCourse, Course, UserLearnLesson, Lesson
+from .models import CareerCourse, Course, UserLearnLesson, Lesson, UserFavoriteCourse
 from django.views.generic import ListView, DetailView, View
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.timezone import now
@@ -96,4 +96,29 @@ class CoursePlayView(ListView):
         else:
             # 更新最后观看的时间
             ulesson.update(date_learning=now())
+
+class FavoriteUpdateView(View):
+    
+    def get(self, request, cid):
+        try:
+            favorite_course = UserFavoriteCourse.objects.filter(
+                course=cid,
+                student__user=request.user,
+                )
+            assert favorite_course
+        except AssertionError:
+            UserFavoriteCourse.objects.create(
+                student=request.user.student,
+                course=get_object_or_404(Course,pk=cid),
+            )
+            message="houseok"
+        else:
+            favorite_course.delete()
+            message="housecancel"
+        finally:
+            return HttpResponse(message)
+
+
+
+
 

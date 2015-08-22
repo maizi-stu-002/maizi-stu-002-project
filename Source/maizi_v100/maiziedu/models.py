@@ -425,7 +425,7 @@ class UserFavoriteCourse(models.Model):
         verbose_name_plural = verbose_name
 
     def __unicode__(self):
-        return self.course
+        return self.student.user.username + "-" + self.course.name
 
 
 # 广告

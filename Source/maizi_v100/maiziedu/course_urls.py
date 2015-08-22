@@ -15,7 +15,12 @@ urlpatterns = [
 					url(r'^(?P<cid>\d+)-(?P<lid>\d+)/$', CoursePlayView.as_view(), name="course_play"),
 				])
 				),
-			url(r'^(\d+)/recent/play/$', RecentPlayView.as_view(), name="recent_play"),
+			url(r'^(?P<cid>\d+)/',
+				include([
+					url(r'^recent/play/$', RecentPlayView.as_view(), name="recent_play"),
+					url(r'^favorite/update/$', FavoriteUpdateView.as_view(), name="favorite_update"),
+				])
+				),
 		]),
 	),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,5 +1,27 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% block head %}
+<style>
+  .ewm{
+    position: absolute;
+    left: 40px;
+    top:100px;
+    background: #fff;
+    box-shadow: 1px 1px 10px #888888;
+    opacity: 0;
+    -webkit-transition:opacity .3s;
+    z-index:100;
+    pointer-events:none;
+  }
+  .ewm p{
+    font-size: 16px;
+  }
+  .downloadv:hover .ewm{
+    opacity: 1;
+  }
+
+</style>
+{% endblock head %}
 {% block content %}
   <div class="container">
     <ol class="breadcrumb">
@@ -37,6 +59,7 @@
                 {% ifequal lesson lesson_to_play  %} 
                   style="background-color:#2D3E50;color:#1BBC9B;"
                 {% endifequal %}
+                  courseId="{{ course.id }}"
                 >{{ lesson.name }}</a></li>
               {% endfor %}
               {% endwith %}
@@ -56,6 +79,12 @@
               <a href="javascript:;" class="downloadv">
                 <i class="v5-icon v5-icon-download"></i>
                 <span>下载</span>
+                <!--二维码-->
+                <div class="ewm">
+                  <p>APP可离线下载该课程</p>
+                  <div id="code"></div> 
+                  <p>扫描二维码下载APP</p>
+                </div>
               </a>
             </div>
             <div class="mc-interact-share">
@@ -368,19 +397,23 @@
       </div>
     </div>
   </div>
-  <!--二维码-->
-  <div class="ewm">
-    <p>APP可离线下载该课程</p>
-    <img src={% static "test/14.png" %}>
-    <p>扫描二维码下载APP</p>
-  </div>
-  {% endblock content %}
-    <!-- Chang URLs to wherever Video.js files will be hosted -->
-  <link href="video-js.css" rel="stylesheet" type="text/css">
-  <!-- video.js must be in the <head> for older IEs to work. -->
-  <script src="video.js"></script>
+{% endblock content %}
+{% block accessory %}
+  <script src={% static "js/jquery.qrcode.js" %}></script>
+  <script src={% static "js/qrcode.js" %}></script>
 
-  <!-- Unless using the CDN hosted version, update the URL to the Flash SWF -->
   <script>
-    videojs.options.flash.swf = "video-js.swf";
+  $(function(){
+    $('.scroll-pane').jScrollPane({
+        autoReinitialise: true
+      });
+    $('#code').qrcode({
+      height:120,
+      width:120,
+      text:"{{ lesson_to_play.video_url}}",
+      background:"#f1f1f1",
+      foreground:"#000000",
+    });
+  });
   </script>
+{% endblock accessory %}
