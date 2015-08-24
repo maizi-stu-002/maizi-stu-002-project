@@ -72,11 +72,18 @@
             <div class="mc-interact-save">
 
              
-              <a href="" class="house">
+              <a href={{ deadlink }} class="house">
+                {% if  housed %}
+                <i class="v5-icon v5-icon-save v5-icon-saved"></i>
+                <span>已收藏</span>
+                  
+                {% else %}
                 <i class="v5-icon v5-icon-save"></i>
                 <span>收藏</span>
+                  
+                {% endif %}
               </a>
-              <a href="javascript:;" class="downloadv">
+              <a href={{ deadlink }} class="downloadv">
                 <i class="v5-icon v5-icon-download"></i>
                 <span>下载</span>
                 <!--二维码-->

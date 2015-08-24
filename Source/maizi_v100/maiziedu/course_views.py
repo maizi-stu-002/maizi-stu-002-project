@@ -5,6 +5,8 @@ from django.views.generic import ListView, DetailView, View
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.timezone import now
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 # Create your views here.
 
 
@@ -16,30 +18,30 @@ def course_globals(request):
 # 课程列表
 class CourseListView(ListView):
     model = CareerCourse
+    template_name = "course.html"
+    # context_object_name = "page"
 
-    def get(self, request):
-        try:
-            assert request.is_ajax()
-        except AssertionError:
-            template_name = "course.html"
-        else:
-            template_name = "course_ajax.html"
-        # 使用通用视图
-        # paginate_queryset(queryset, page_size)
-        # Returns a 4-tuple containing (paginator, page, object_list,
-        # is_paginated).
-        page = self.paginate_queryset(self.get_queryset(), 6)[1]
-        return render(request, template_name, locals())
+    def get_context_data(self, **kwargs):
+        if self.request.is_ajax():
+            self.template_name = "course_ajax.html"
+        context = super(CourseListView, self).get_context_data(**kwargs)
+        context['page'] = self.paginate_queryset(self.get_queryset(), 6)[1]
+        return context
 
 
 # 课程阶段
-class CourseStageView(DetailView):
-    model = CareerCourse
+class CourseStageView(ListView):
+    template_name = "details.html"
 
-    def get(self, request, name):
-        career = get_object_or_404(self.get_queryset(), symbol=name)
-        return render(request, "details.html", locals())
+    def get_queryset(self):
+        self.career = get_object_or_404(
+            CareerCourse, symbol=self.kwargs['name'])
 
+    def get_context_data(self, **kwargs):
+        context = super(CourseStageView, self).get_context_data(**kwargs)
+        context['career'] = self.career
+        context['login'] = self.request.user.is_authenticated()
+        return context
 
 # 最近播放
 class RecentPlayView(DetailView):
@@ -58,67 +60,87 @@ class RecentPlayView(DetailView):
             assert ulesson
         except AssertionError:
             lesson = get_object_or_404(Course, pk=cid).lesson_set.all()[0]
-        else:         
+        else:
             lesson = ulesson.order_by("-date_learning")[0].lesson
         finally:
             return lesson
 
 
 # 课程播放
-class CoursePlayView(ListView):
-    model = Course
+class LessonPlayView(DetailView):
+    template_name = "course_play.html"
+    pk_url_kwarg = "lid"
 
-    def get(self, request, name, cid, lid):
-        course = get_object_or_404(self.get_queryset(), pk=cid)
-        lesson_to_play = get_object_or_404(Lesson, pk=lid)
-        try:
-            assert request.user.is_authenticated()
-        except AssertionError:
-            pass
+    def get_queryset(self):
+        self.course = get_object_or_404(Course, pk=self.kwargs.get('cid'))
+        self.lessonToPlay = get_object_or_404(Lesson, pk=self.kwargs.get('lid'))
+        self.studentCount = UserLearnLesson.objects.filter(lesson=self.lessonToPlay).count() - 1
+        if self.request.user.is_authenticated():
+            self.housed = UserFavoriteCourse.objects.filter(
+            course=self.course,
+            student__user=self.request.user)
         else:
-            self.update_recent_played_lesson(request, lid)
-        finally:
-            studentCount = UserLearnLesson.objects.filter(lesson=lesson_to_play).count()-1
-            return render(request, "course_play.html", locals())
+            self.housed = False
 
-    def update_recent_played_lesson(self, request, lid):
+        return self.course.lesson_set.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(LessonPlayView, self).get_context_data(**kwargs)
+        context['course'] = self.course
+        context['lesson_to_play'] = self.lessonToPlay
+        context['studentCount'] = self.studentCount
+        context['housed'] = self.housed
+        return context
+
+    def get_object(self):
+        # Call the superclass
+        lesson = super(LessonPlayView, self).get_object()
+        # Record the recent-played lesson
+        if self.request.user.is_authenticated():
+            self.update_recent_played_lesson()  
+        # Return the object
+        return lesson
+
+    def update_recent_played_lesson(self):
         # 判断该课时是否由该用户观看过
+        lid = self.kwargs.get("lid")
+        user = self.request.user
         try:
             ulesson = UserLearnLesson.objects.filter(
-                lesson=lid, student__user=request.user)
+                lesson=lid, student__user=user)
             assert ulesson
         except AssertionError:
             # 新建观看的记录
             UserLearnLesson.objects.create(
-                student=request.user.student,
-                lesson=get_object_or_404(Lesson,pk=lid)
+                student=user.student,
+                lesson=get_object_or_404(Lesson, pk=lid)
             )
         else:
             # 更新最后观看的时间
             ulesson.update(date_learning=now())
 
+
 class FavoriteUpdateView(View):
-    
-    def get(self, request, cid):
+
+    def get(self,request,cid):
+        if not request.user.is_authenticated():
+            return HttpResponse("notuser")
+        favorite_course = UserFavoriteCourse.objects.filter(
+            course=cid,
+            student__user=request.user)
         try:
-            favorite_course = UserFavoriteCourse.objects.filter(
-                course=cid,
-                student__user=request.user,
-                )
             assert favorite_course
         except AssertionError:
             UserFavoriteCourse.objects.create(
                 student=request.user.student,
-                course=get_object_or_404(Course,pk=cid),
+                course=get_object_or_404(Course, pk=cid),
             )
-            message="houseok"
+            message = "houseok"
         else:
             favorite_course.delete()
-            message="housecancel"
+            message = "housecancel"
         finally:
             return HttpResponse(message)
-
-
 
 
 

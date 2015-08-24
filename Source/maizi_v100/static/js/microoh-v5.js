@@ -97,6 +97,8 @@ $(function(){
             }else if (data=="housecancel"){
               $house.children("i").removeClass("v5-icon-saved");
               $house.children("span").text('收藏');
+           }else if (data=="notuser"){
+            $("#gotologin").click();
            }
          }
       });        

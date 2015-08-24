@@ -48,7 +48,7 @@
         {% for course in stage.course_set.all %}
           <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
             <div class="lead-img"><a href="
-                {% if request.user.is_authenticated %}             
+                {% if login %}             
                 {% url 'recent_play' course.id %}?stageid={{course.stage.id}}
                 {% else %}
                 {% url 'course_play' symbol course.id course.lesson_set.all.0.id as course_play_url %}
@@ -58,7 +58,7 @@
             title={{ course.description}}><img src={{ course.avatarUrl.url }}></a></div>
             <div class="artc-bt">
               <h3><a href="
-                {% if request.user.is_authenticated %}             
+                {% if login %}             
                 {% url 'recent_play' course.id %}?stageid={{course.stage.id}}
                 {% else %}
                 {{ course_play_url }}

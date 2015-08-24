@@ -12,7 +12,7 @@ urlpatterns = [
 			url(r'^(?P<name>[\w-]+)/',
 				include([
 					url(r'^$', CourseStageView.as_view(), name="course_stage"),
-					url(r'^(?P<cid>\d+)-(?P<lid>\d+)/$', CoursePlayView.as_view(), name="course_play"),
+					url(r'^(?P<cid>\d+)-(?P<lid>\d+)/$', LessonPlayView.as_view(), name="course_play"),
 				])
 				),
 			url(r'^(?P<cid>\d+)/',
