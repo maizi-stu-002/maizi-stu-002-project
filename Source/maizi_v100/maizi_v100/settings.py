@@ -75,6 +75,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'maiziedu.course_views.course_globals',
+                'maiziedu.home_views.home_globals',  # home_views全局信息配置
             ],
         },
     },

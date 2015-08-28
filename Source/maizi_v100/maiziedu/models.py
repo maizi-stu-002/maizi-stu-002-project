@@ -248,6 +248,7 @@ class CareerCourse(models.Model):
     img_url = models.ImageField(u'图片路径', upload_to='career_course/%Y/%m',
                                 default='career_course/default.png', max_length=200)
     symbol = models.CharField(u'代号', max_length=10, blank=False, null=True)
+    course_color = models.CharField(u'课程背景颜色', max_length=10, default='#9d7cd4')
     purchase = models.ForeignKey(UserPurchase, verbose_name=u'用户购买', null=True, blank=True)
     # planning = models.ForeignKey(Planning, verbose_name=u'课程计划', null=True, blank=True)
 
@@ -296,6 +297,7 @@ class Course(models.Model):
     name = models.CharField(u'名称', max_length=50)
     description = models.CharField(u'描述', max_length=200)
     img_url = models.ImageField(u'图片', upload_to='course/%Y/%m', default='course/default.png', max_length=200)
+    course_color = models.CharField(u'课程背景颜色', max_length=10, default='#ff0000')
     is_active = models.BooleanField(u'状态', default=True)
     date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
     play_count = models.IntegerField(u'播放次数', default=0)
