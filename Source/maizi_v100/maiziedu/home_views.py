@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import json
 from django.core.paginator import Paginator, InvalidPage, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.db.models import Q
 from django.conf import settings
 from models import *
@@ -24,14 +26,14 @@ def home_globals(request):
     # 友情链接
     link_list = Links.objects.all()
     # 网站导航
-    home_page = settings.HOME_PAGE              # 网站首页
-    about_us = settings.ABOUT_US                # 关于我们
-    contact_us = settings.CONTACT_US            # 联系我们
-    join_us = settings.JOIN_US                  # 加入我们
+    home_page = settings.HOME_PAGE  # 网站首页
+    about_us = settings.ABOUT_US  # 关于我们
+    contact_us = settings.CONTACT_US  # 联系我们
+    join_us = settings.JOIN_US  # 加入我们
     # 关注我们
-    weibo_sina = settings.WEIBO_SINA            # 新浪微博
-    weibo_tencent = settings.WEIBO_TENCENT      # 腾讯微博
-    weixin = settings.WEIXIN                    # 官方微信
+    weibo_sina = settings.WEIBO_SINA  # 新浪微博
+    weibo_tencent = settings.WEIBO_TENCENT  # 腾讯微博
+    weixin = settings.WEIXIN  # 官方微信
     # 最新课程
     new_add = Course.objects.order_by('-date_publish')
     new_add = get_page(request, new_add)
@@ -42,11 +44,11 @@ def home_globals(request):
     hot_favorite = Course.objects.order_by('-favorite_count')
     hot_favorite = get_page(request, hot_favorite)
     # 推荐阅读
-    official_activity = RecommendRead.objects.filter(category='1').order_by('-date_publish')[:5]        # 官方活动
-    technology_exchange = RecommendRead.objects.filter(category='2').order_by('-date_publish')[:5]      # 技术交流
-    developer_information = RecommendRead.objects.filter(category='3').order_by('-date_publish')[:5]    # 开发者资讯
+    official_activity = RecommendRead.objects.filter(category='1').order_by('-date_publish')[:5]  # 官方活动
+    technology_exchange = RecommendRead.objects.filter(category='2').order_by('-date_publish')[:5]  # 技术交流
+    developer_information = RecommendRead.objects.filter(category='3').order_by('-date_publish')[:5]  # 开发者资讯
     # 关键字
-    keyword_list = Keywords.objects.all()
+    keyword_list = Keywords.objects.all()[:6]
 
     return locals()
 
@@ -71,18 +73,48 @@ def has_course(request, teacher_id):
         logger.error(e)
 
 
-# 搜索
-def search(request):
-    # 获取搜索框输入内容
-    if 'q' in request.GET and request.GET['q']:  # 获得用户输入值
-        search_content = request.GET('q')
-        # 根据搜索内容模糊匹配职业课程
-        search_career_course = CareerCourse.objects.filter(
-            Q(name__icontains=search_content) | Q(description__icontains=search_content))
-        # 根据搜索内容模糊匹配课程
-        search_course = Course.objects.filter(
-            Q(name__icontains=search_content) | Q(description__icontains=search_content))
-        return render(request, 'search.html', locals())
+# 搜索结果
+def search_results(request):
+    try:
+        keyword = request.GET.get('keyword', '')
+        if keyword:
+            qset = (
+                Q(name__icontains=keyword) | Q(description__icontains=keyword)
+            )
+            # 职业课程
+            career_course_list = []
+            career_courses = CareerCourse.objects.filter(qset).distinct()
+            for career_course in career_courses:
+                career_course_dict = {
+                    'name': career_course.name,
+                    'course_color': career_course.course_color,
+                    'id': career_course.id,
+                    # 'img_url': career_course.img_url,
+                }
+                career_course_list.append(career_course_dict)
+
+            # 课程
+            course_list = []
+            courses = Course.objects.filter(qset).distinct()
+            for course in courses:
+                course_dict = {
+                    'name': course.name,
+                    # 'img_url': course.img_url,
+                    'id': course.id,
+                    'stage_id': course.stage.id,
+                    'course_color': course.course_color,
+                }
+                course_list.append(course_dict)
+            results = {'career_courses': career_course_list, 'courses': course_list}
+        else:
+            results = []
+        print results
+        data = json.dumps(results)
+        print data
+        content_type = 'application/json'
+        return HttpResponse(data, content_type)
+    except Exception as e:
+        logger.error(e)
 
 
 # 分页代码
