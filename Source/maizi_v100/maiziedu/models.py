@@ -206,21 +206,21 @@ class UserPurchase(models.Model):
     pay_type = (  # 购买类型
                   ('1', 'VIP'),
                   ('2', u'职业课程'),
-    )
+                  )
     pay_stage = (  # 购买阶段
                    ('0', u'所有阶段'),
                    ('1', u'阶段一'),
                    ('2', u'其它阶段'),
-    )
+                   )
     pay_way = (  # 支付方式
                  ('1', u'支付宝'),
                  ('2', u'快钱'),
-    )
+                 )
 
     pay_status = (  # 支付状态
                     ('1', u'成功'),
                     ('2', u'失败'),
-    )
+                    )
     pay_price = models.DecimalField(u'购买价格', max_digits=5, decimal_places=2)
     ording_coding = models.CharField(u'预定语言', max_length=200)
     trad_coding = models.CharField(u'交易语言', max_length=200)
@@ -262,7 +262,7 @@ class CareerCourse(models.Model):
 
     def get_user_ount(self):
         # 所有学习该课程的学生人数
-        return UserLearnLesson.objects.filter(lesson__in=self.getLessons()).count()
+        return UserLearnLesson.objects.filter(lesson__in=self.getLessons()).values('student').distinct().count()
 
     def get_time_to_spend(self):
         # 职业课程下所有视频累计时间
@@ -271,7 +271,7 @@ class CareerCourse(models.Model):
     class Meta:
         verbose_name = u'职业课程'
         verbose_name_plural = verbose_name
-        ordering = ("symbol",)
+        ordering = ("name", "id")
 
     def __unicode__(self):
         return '%s, %s' % (self.name, self.total_price)
@@ -332,6 +332,7 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = u'课时'
         verbose_name_plural = verbose_name
+        ordering = ('index', 'name')
 
     def __unicode__(self):
         return self.name
@@ -391,7 +392,7 @@ class UserFavoriteCourse(models.Model):
         verbose_name_plural = verbose_name
 
     def __unicode__(self):
-        return self.course
+        return self.student.user.username + "-" + self.course.name
 
 
 # 推荐阅读
@@ -477,7 +478,6 @@ class Student(models.Model):
 
     def __unicode__(self):
         return self.user.username
-
 
 # # 计划事项
 # class PlanningItem(models.Model):
