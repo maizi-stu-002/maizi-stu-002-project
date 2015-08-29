@@ -1,0 +1,15 @@
+{% load staticfiles %}
+    <div class="v5-banner-big">
+        <div class="container">
+            <div class="carousel-container">
+                <div id="carousel">
+                    {% for ad in ad_list %}
+                        <div class="carousel-feature">
+                            <a href="{{ ad.callback_url }}"><img class="carousel-image" alt="{{ ad.title }}"
+                                                                 src="{{ media_url }}{{ ad.img_url }}"></a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>

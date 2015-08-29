@@ -52,6 +52,9 @@ coverage.xml
 
 # Django stuff:
 *.log
+migrations/
+uploads/
+settings.py
 
 # Sphinx documentation
 docs/_build/
@@ -61,4 +64,3 @@ target/
 
 # Pycharm
 .idea/
-migrations/
