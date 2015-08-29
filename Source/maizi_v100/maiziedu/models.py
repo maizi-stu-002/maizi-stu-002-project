@@ -118,7 +118,7 @@ class Teacher(models.Model):
         verbose_name_plural = verbose_name
 
     def __unicode__(self):
-        return self.user.nick_name
+        return self.user.username
 
 
 # 我的课程
@@ -374,7 +374,8 @@ class Lesson(models.Model):
 # 课程资源
 class LessonResource(models.Model):
     name = models.CharField(u'名称', max_length=50, blank=True)
-    download_url = models.CharField(u'下载地址', max_length=200, blank=True)
+    resource = models.FileField(upload_to="lesson",verbose_name=u"课件",null=True,blank=True)
+    # download_url = models.CharField(u'下载地址', max_length=200, blank=True)
     download_count = models.IntegerField(u'下载计数', null=True, blank=True)
     lesson = models.ForeignKey(Lesson, verbose_name=u'所属课时')
 
@@ -392,11 +393,20 @@ class Discuss(models.Model):
     parent_id = models.IntegerField(u'父编号', null=True, blank=True)
     date_publish = models.DateTimeField(u'发布日期', auto_now_add=True)
     lesson = models.ForeignKey(Lesson, verbose_name=u'所属课时')
+    user = models.ForeignKey(UserProfile, verbose_name=u'用户',null=True)
 
     class Meta:
         verbose_name = u'课时讨论'
         verbose_name_plural = verbose_name
         ordering = ['-date_publish']
+
+    def __unicode__(self):
+        return "-".join([
+            str(self.pk),
+            self.lesson.name,
+         self.user.username,
+         str(self.parent_id),
+                    ]) 
 
 
 # 用户学习课时

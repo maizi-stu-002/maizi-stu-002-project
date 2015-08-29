@@ -1,4 +1,5 @@
 $(function(){
+// course_stage.html
 	$(".btn-micv5").on("click", function(){
 		// 点击按钮跳转到列表中第一个课程播放页面
 	     url = $("article h3").find("a").first().attr("href");
@@ -7,22 +8,20 @@ $(function(){
 	     }
 	});
 
-
-//课程列表通过ajax进行翻页
-
-//翻页动画
-var courselistAnimate = function(data){
-	$(".course-list").animate({
-		'opacity':0,
-	},50,function(){
-		var $courselist = $(".course-list");
-		$courselist.html(data);
-		$courselist.animate({
-			'opacity':1,
-		},550)		
-	});	
-}
-
+	// course.html
+	//课程列表通过ajax进行翻页
+	//翻页动画
+	var courselistAnimate = function(data){
+		$(".course-list").animate({
+			'opacity':0,
+		},50,function(){
+			var $courselist = $(".course-list");
+			$courselist.html(data);
+			$courselist.animate({
+				'opacity':1,
+			},550);
+		});	
+	};
 	//数字按钮
 	$(".page-num").on("click", function(){
 		var $btn = $(this);
@@ -34,7 +33,7 @@ var courselistAnimate = function(data){
 					courselistAnimate(data);
 					// $('.page-num').removeClass('active');
 					// $btn.addClass("active");
-					$btn.addClass("active").parent().siblings().children(".page-num").removeClass("active")
+					$btn.addClass("active").parent().siblings().children(".page-num").removeClass("active");
 				}
 			});
 		}		
@@ -60,7 +59,7 @@ var courselistAnimate = function(data){
 		var $active_btn = $('.page-num').filter('.active');
 		var $last_btn_text = $('.page-num').last().text();
 		if($active_btn.text() === $last_btn_text){
-			return false
+			return false;
 		}else{
 			var pageNum = parseInt($active_btn.text()) + 1;
 			$.get("/course/", {'page':pageNum}, function(data, status){
@@ -72,5 +71,4 @@ var courselistAnimate = function(data){
 			});
 		}
 	});
-
 });

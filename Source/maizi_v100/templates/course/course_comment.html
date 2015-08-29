@@ -1,0 +1,82 @@
+
+{% load course_filter %}
+{% load staticfiles %}
+{% for cmt in comments %}              
+  <li class="media" id="{{ cmt.id }}">
+    <a class="pull-left" href="#">
+      <img class="media-object"
+      {% with cmt.user.avatar_url as avatar %}
+      {% if avatar %}
+        src="/uploads/{{ avatar }}"
+      {% else %}
+        src="{% static 'images/default_small.png' %}"
+      {% endif %}
+       {% endwith %} 
+       >
+    </a>
+    <div class="media-body">
+      <h4 class="media-heading">
+        <a href="" class="{% if request.user.is_authenticated %}reply{% else %}no-reply{% endif %}">回复</a>
+        <span class="user-name"> {% if cmt.user.username %} {{ cmt.user.username}} 
+        {% elif cmt.user.email %} {{ cmt.user.email }} {% endif %}</span>
+        {% if cmt.user.teacher %}<span class="grade">老师</span> {% endif %}
+        <span class="time">{{ cmt.date_publish|postsince}}</span>
+      </h4>
+      <p>{{ cmt.content }}</p>
+      <!--子级评论-->
+      {% for subcmt in cmt.subcomment  %}
+      <div class="media">
+        <a class="pull-left" href="#">
+          <img class="media-object"
+            {% with subcmt.user.avatar_url as avatar %}
+            {% if avatar %}
+              src="/uploads/{{ avatar }}"
+            {% else %}
+              src="{% static 'images/default_small.png' %}"
+            {% endif %}
+             {% endwith %} 
+          >
+        </a>
+        <div class="media-body">
+          <h4 class="media-heading">
+            <a href="" class="{% if request.user.is_authenticated %}reply{% else %}no-reply{% endif %}">回复</a>
+            <span class="user-name">{{ subcmt.user.username }}</span>
+            {% if subcmt.user.teacher %}
+            <span class="grade">老师</span>
+            {% endif %}
+            <span class="time">{{ subcmt.date_publish|postsince }}</span>
+          </h4>
+          <p>{{ subcmt.content }}</p>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="media hidden">
+        <a class="pull-left" href="#">
+          <img class="media-object"
+            {% if user.avatar_url %}
+              src="/uploads/{{ user.avatar_url }}"
+            {% else %}
+              src="{% static 'images/default_small.png' %}"
+            {% endif %}
+          >
+        </a>
+        <div class="media-body">
+          <h4 class="media-heading">
+            <a href="" class="close-btn">close</a>
+            <span class="user-name">{{ user.username }}</span>
+            {% if user.teacher %}
+            <span class="grade">老师</span>
+            {% endif %}
+          </h4>
+          <div class="comment-input">
+                <textarea class="form-control" rows="3" placeholder="我要评论"></textarea>
+                <div class="btnbox">
+                  <button type="button" class="btn btn-micv5 btn-lg-fts">回复</button>
+                </div>
+          </div>
+        </div>
+      </div>
+      <!--子级评论-->
+    </div>
+  </li>
+{% endfor %}

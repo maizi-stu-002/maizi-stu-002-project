@@ -19,8 +19,26 @@
   .downloadv:hover .ewm{
     opacity: 1;
   }
+  .mc-interact-share{
+    pointer-events:none;
+    opacity: 1;
+  }
+  .v5-icon-sina,.v5-icon-qqzone,.v5-icon-weixin{
+  
+    pointer-events:auto;
+  }
+
+  .v5-icon-sina:hover,.v5-icon-qqzone:hover,.v5-icon-weixin:hover{
+    opacity: .8;
+  }
+  #video-player .vjs-big-play-button{
+    display: none;
+  }
 
 </style>
+<link rel="stylesheet" href={% static "js/video-js/video-js.css" %}>
+<link rel="stylesheet" href={% static "js/jquery.fileupload.css" %}>
+<script src={% static "js/video-js/video.js" %}></script>
 {% endblock head %}
 {% block content %}
   <div class="container">
@@ -37,30 +55,42 @@
         <dt>{{ course.name }}</dt>
         <dd>{{ course.description }}</dd>
       </dl>
+      
       <div class="course-play-container">
-        <div class="row">
+        <div class="row popover-test-container">
           <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 course-play-box" style="background-color: #000">
-            <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" autoplay width="100%" height="100%"
-                poster data-setup="{}">
-              <source src="{{ lesson_to_play.video_url}}" type='video/mp4'/>
-              <track kind="subtitles" src="demo.captions.vtt" srclang="en" label="English"></track><!-- Tracks need an ending tag thanks to IE9 -->
-              <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
-            </video>
+           <video id="video-player" class="video-js vjs-default-skin" controls preload="none" 
+            width="100%" height="100%" autoplay data-setup='{"playbackRates":[1, 1.25, 1.5, 2]}'>
+               <source src="{{ lesson_to_play.video_url }}" type='video/mp4' />
+             </video>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 course-play-list">
             <h1>课程章节</h1>
-            <div class="playlist scroll-pane">
+            <div id="playlist" class="playlist scroll-pane">
               <ul>
               {% with course.stage.career_course.symbol as symbol %}
                   
               {% for lesson in course.lesson_set.all %}
                 
-                <li><a href="{% url 'course_play' symbol course.id lesson.id %}"
                 {% ifequal lesson lesson_to_play  %} 
+                <li class="active_null"><a
+                  href="{% url 'course_play' symbol course.id lesson.id %}"
                   style="background-color:#2D3E50;color:#1BBC9B;"
-                {% endifequal %}
                   courseId="{{ course.id }}"
-                >{{ lesson.name }}</a></li>
+                  lessonId="{{ lesson.id }}"
+                  class="active"
+                >
+                {% else %}
+                <li><a href="{% url 'course_play' symbol course.id lesson.id %}"
+                  courseId="{{ course.id }}"
+                  lessonId="{{ lesson.id }}">
+                {% endifequal %}
+                {{ lesson.name }}</a>
+                {% if not is_user and forloop.counter > 2 %}
+                <i class="v5-icon v5-icon-lock"></i>
+                  
+                {% endif %}
+                </li>
               {% endfor %}
               {% endwith %}
               </ul>
@@ -97,9 +127,9 @@
             <div class="mc-interact-share">
               <dl>
                 <dt class="cf">
-                  <a href="" class="v5-icon v5-icon-sina"></a>
-                  <a href="" class="v5-icon v5-icon-qqzone"></a>
-                  <a href="" class="v5-icon v5-icon-sina"></a>
+                  <a href="{{ deadlink }}" class="v5-icon v5-icon-sina"></a>
+                  <a href="{{ deadlink }}" class="v5-icon v5-icon-qqzone"></a>
+                  <a href="{{ deadlink }}" class="v5-icon v5-icon-weixin"></a>
                 </dt>
                 <dd>分享给朋友</dd>
               </dl>
@@ -117,119 +147,73 @@
         <div class="row course-play-info">
           <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 aside-l">
           	<ul class="course-play-tabs" role="tablist">
-              <li><a href="#comm" role="tab" data-toggle="tab">学习交流</a></li>
+              <li class="active"><a href="#comm" role="tab" data-toggle="tab">学习交流</a></li>
               <li><a href="#exercise" role="tab" data-toggle="tab">在线练习</a></li>
-              <li><a href="#submit" role="tab" data-toggle="tab">作业提交</a></li>
-              <li class="active"><a href="#download" role="tab" data-toggle="tab">课件下载</a></li>
+              {% if is_user %}
+                
+              <li ><a href="#submit" role="tab" data-toggle="tab">作业提交</a></li>
+              {% endif %}
+              <li><a href="#download" role="tab" data-toggle="tab">课件下载</a></li>
             </ul>
             <div class="tab-content">
-              <div class="tab-pane" id="comm">
+              <div class="tab-pane active" id="comm">
                 <div class="media">
                   <a class="pull-left" href="#">
-                    <img class="media-object" src="test/12.jpg">
+                    <img class="media-object" 
+                    {% if user.avatar_url %}
+                    src="/uploads/{{ user.avatar_url }}"
+                      
+                    {% else %}
+                    src='{% static "images/default_small.png" %}'
+                    {% endif %}>
                   </a>
                   <div class="media-body">
                     <h4 class="media-heading">
-                      <span class="user-name">kaily_zhou@126.com</span>
+                      {% if is_user %}
+                      <span class="user-name">
+                        {% if user.username %}
+                        {{ user.username}}
+                        {% elif user.email %}
+                        {{ user.email }}
+                        {% endif %}
+                      </span>
+                        {% if is_teacher %}
+                        <span class="grade">老师</span>
+                        {% endif %}
+                      {% else %}
+                      <span class="user-name">
+                        尚未登陆
+                      </span>
+                      {% endif %}
+         
                     </h4>
                     <div class="comment-input">
-                      <textarea class="form-control" rows="3" placeholder="我要评论"></textarea>
+                      <textarea class="form-control" rows="3" placeholder="我要评论"
+                      {% if not is_user %}disabled{% endif %}></textarea>
+                      {% if not is_user %}
+                        <div class="not-logged">
+                          <p>请先<a href="#" data-toggle="modal" data-target="#loginModal">登录</a>或<a href="" data-toggle="modal" data-target="#registerModal">注册</a></p>
+                        </div>
+                      {% endif %}
                       <div class="btnbox">
-                        <button type="button" class="btn btn-micv5 btn-lg-fts">发布评论</button>
+                        <button type="button" 
+                        {% if not is_user %}
+                        class="btn btn-micv5 btn-lg-fts btn-micv5-disabled" disabled
+                        {% else %}
+                        class="btn btn-micv5 btn-lg-fts"
+                        {% endif %}
+                        >发布评论</button>
                       </div>
                     </div>
                   </div>
                 </div>
+                <!--父级评论开始-->
                 <ul class="media-list">
-                  <li class="media">
-                    <a class="pull-left" href="#">
-                      <img class="media-object" src="test/12.jpg">
-                    </a>
-                    <div class="media-body">
-                      <h4 class="media-heading">
-                        <a href="" class="reply">回复10</a>
-                        <span class="user-name">kaily_zhou@126.com</span>
-                        <span class="time">4小时前</span>
-                      </h4>
-                      <p>这课程真棒！</p>
-                      <div class="media">
-                        <a class="pull-left" href="#">
-                          <img class="media-object" src="test/12.jpg">
-                        </a>
-                        <div class="media-body">
-                          <h4 class="media-heading">
-                            <span class="user-name">kaily_zhou@126.com</span>
-                            <span class="grade">老师</span>
-                          </h4>
-                          <div class="comment-input">
-                            <textarea class="form-control" rows="3" placeholder="我要评论"></textarea>
-                            <div class="btnbox">
-                              <button type="button" class="btn btn-micv5 btn-lg-fts">回复</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
+                  {% include "course_comment.html" %}
                 </ul>
-                <ul class="media-list">
-                  <li class="media">
-                    <a class="pull-left" href="#">
-                      <img class="media-object" src="test/12.jpg">
-                    </a>
-                    <div class="media-body">
-                      <h4 class="media-heading">
-                        <a href="" class="reply">回复10</a>
-                        <span class="user-name">kaily_zhou@126.com</span>
-                        <span class="time">4小时前</span>
-                      </h4>
-                      <p>这课程真棒！</p>
-                      <div class="media">
-                        <a class="pull-left" href="#">
-                          <img class="media-object" src="test/12.jpg">
-                        </a>
-                        <div class="media-body">
-                          <h4 class="media-heading">
-                            <a href="" class="reply">回复10</a>
-                            <span class="user-name">kaily_zhou@126.com</span>
-                            <span class="grade">老师</span>
-                            <span class="time">4小时前</span>
-                          </h4>
-                          <p>继续努力，继续努力</p>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-                <ul class="media-list">
-                  <li class="media">
-                    <a class="pull-left" href="#">
-                      <img class="media-object" src="test/12.jpg">
-                    </a>
-                    <div class="media-body">
-                      <h4 class="media-heading">
-                        <a href="" class="reply">回复10</a>
-                        <span class="user-name">kaily_zhou@126.com</span>
-                        <span class="time">4小时前</span>
-                      </h4>
-                      <p>这课程真棒！</p>
-                      <div class="media">
-                        <a class="pull-left" href="#">
-                          <img class="media-object" src="test/12.jpg">
-                        </a>
-                        <div class="media-body">
-                          <h4 class="media-heading">
-                            <a href="" class="reply">回复10</a>
-                            <span class="user-name">kaily_zhou@126.com</span>
-                            <span class="grade">老师</span>
-                            <span class="time">4小时前</span>
-                          </h4>
-                          <p>继续努力，继续努力</p>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
+                <!-- 父级评论结束 -->
+
+
               </div>
               <div class="tab-pane" id="exercise">
               	<div class="row exercise-table">
@@ -286,58 +270,51 @@
                   </div>
                 </div>
               </div>
+              {% if is_user %}
+                
               <div class="tab-pane" id="submit">
-                <h1>需求描述</h1>
-                <p>1、对功能的规定</p>
-                <p>用列表的方式（例如IPO表即输入、处理、输出表的形式），逐项定量和定性地叙述对软件所提出的功能要求，说明输入什么量、经怎样的处理、得到什么输出，说明软件应支持的终端数和应支持的并行操作的用户数。</p>
-                <p>2、对性能的规定</p>
-                <p>(1)精度</p>
-                <p>说明对该软件的输入、输出数据精度的要求，可能包括传输过程中的精度。</p>
-                <p>(2)时间特性要求</p>
-                <p>说明对于该软件的时间特性要求，如对：</p>
-                <p>① 响应时间。</p>
-                <p>② 更新处理时间。</p>
-                <p>③ 数据的转换和传送时间。</p>
-                <p>④ 解题时间。</p>
-                <p>等的要求。</p>
-                <p>(3)灵活性</p>
-                <p>说明对该软件的灵活性的要求，即当需求发生某些变化时，该软件对这些变化的适应能力，如：</p>
-                <p>① 操作方式上的变化。</p>
-                <p>② 运行环境的变化。</p>
-                <p>③ 同其他软件的接口的变化。</p>
+                <p align="center">这是默认的课后作业，赶快把老师课堂讲的代码做一遍提交上来吧</p>
+                <br>
+               
                 <!--开始上传-->
-                <div class="btn-box">
-                  <button type="button" class="btn btn-micv5 btn-v5-lg">开始上传</button>
+                <div class="btn-box job-sub">
+                  <span class="btn btn-micv5 btn-v5-lg sub-work fileinput-button">
+                      <span>
+                      {% if upload_file_exists %}
+                        
+                      重新上传
+                      {% else %}
+                      选择作业
+                      {% endif %}
+                      </span>
+                      {{ uploadFileForm.FileData }}
+                  </span>
+                  
+                </div>
+                <div class="progress work-pro" id="progress" style="display:none;margin:20px 0;">
+                        <div class="progress-bar progress-bar-success" style="background-color:#1BBC9B"></div>
                 </div>
                 <div class="success-tips"><span>上传此章作业（ZIP、RAR）</span></div>
-
-                <!--上传出错-->
-                <div class="btn-box">
-                  <button type="button" class="btn btn-micv5 btn-v5-lg">重新上传</button>
+                <div class="tips-error bg-danger text-danger" style="display:none;">错误提示</div>
+                <div class="success-tips success-msg" style="display: none;">
+                        <i class="v5-icon v5-icon-success"></i>
+                        <span>此章节的作业已上传成功，继续努力！</span>
                 </div>
-                <div class="tips-error bg-danger text-danger">错误提示</div>
-                
-                <!--上传成功-->
-                <div class="success-tips"><i class="v5-icon v5-icon-success"></i><span>此章节的作业已上传成功，继续努力！</span></div>
+               
               </div>
-              <div class="tab-pane active" id="download">
+              {% endif %}
+              <div class="tab-pane" id="download">
               	<table class="table">
                   <tbody>
+                  {% for lr in lessonResource %}
+                    
                     <tr>
-                      <td width="9%"><img src="images/doc/rar.png"></td>
-                      <td width="36%">Sample code.zip</td>
-                      <td width="55%" class="text-align-r"><a href="" class="btn btn-micv5"><i class="v5-icon v5-icon-downloadsm"></i>下载</a></td>
+                      <td width="9%"><img src={% static "images/doc/rar.png" %}></td>
+                      <td width="36%">{{ lr.name }}</td>
+                      <td width="55%" class="text-align-r"><a href="{{ lr.resource.url }}" class="btn btn-micv5"><i class="v5-icon v5-icon-downloadsm"></i>下载</a></td>
                     </tr>
-                    <tr>
-                      <td width="9%"><img src="images/doc/zip.png"></td>
-                      <td width="36%">Sample code.zip</td>
-                      <td width="55%" class="text-align-r"><a href="" class="btn btn-micv5"><i class="v5-icon v5-icon-downloadsm"></i>下载</a></td>
-                    </tr>
-                    <tr>
-                      <td width="9%"><img src="images/doc/pdf.png"></td>
-                      <td width="36%">Larry.pdf</td>
-                      <td width="55%" class="text-align-r"><a href="" class="btn btn-micv5"><i class="v5-icon v5-icon-downloadsm"></i>下载</a></td>
-                    </tr>
+                  {% endfor %}
+                 
                   </tbody>
                 </table>
               </div>
@@ -348,16 +325,16 @@
               <h1>讲师介绍</h1>
               <div class="media teacher">
                 <a class="pull-left" href="#">
-                  <img src="test/2.jpg">
+                  <img src={{ course.teacher.user.avatar_url.url}}>
                 </a>
                 <div class="media-body">
-                  <h4 class="media-heading">Media heading</h4>
-                  <p>台湾安卓框架联盟总架构师</p>
+                  <h4 class="media-heading">{{ course.teacher.user.username }}</h4>
+                  <p>{{ course.teacher.position }}</p>
                   <a href="" class="btn btn-micv5">查看他的课程</a>
                 </div>
               </div>
               <article>
-              	Android专家顾问，台湾Android论坛主席，现任亚太地区Android技术大会主席，台湾Android领域框架开发联盟总架构师。
+              	{{ course.teacher.description }}
               </article>
             </div>
             <div class="v5-box">
@@ -404,23 +381,102 @@
       </div>
     </div>
   </div>
+  <!--在线测试-->
+  <div class="modal fade" id="onlinetestModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"> 
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="box-onlinetest">
+            <article>
+              <div class="onlinetest-wp cf">
+                <section>
+                  <h1 class="ft20 text-center">在线测试</h1>
+                  <p>有以下程序段: int s=0,a=1,n; scanf("%d",&n);do {  s+=1;a=a-2; }  while(a!=n);printf("%d\n",s);若要使程序的输出值为2，则应该从键盘给n输入的值是(      )</p>
+                  <button>A：1</button>
+                  <button>B：2</button>
+                  <button>C：3</button>
+                  <button>D：4</button>
+                  <span>1/5</span>
+                </section>
+                <section>
+                  <h1 class="ft20 text-center">在线测试</h1>
+                  <p>有以下程序段: int s=0,a=1,n; scanf("%d",&n);do {  s+=1;a=a-2; }  while(a!=n);printf("%d\n",s);若要使程序的输出值为2，则应该从键盘给n输入的值是(      )</p>
+                  <button>A：1</button>
+                  <button>B：2</button>
+                  <button>C：3</button>
+                  <button>D：4</button>
+                  <span>2/5</span>
+                </section>
+                <section>
+                  <h1 class="ft20 text-center">在线测试</h1>
+                  <p>有以下程序段: int s=0,a=1,n; scanf("%d",&n);do {  s+=1;a=a-2; }  while(a!=n);printf("%d\n",s);若要使程序的输出值为2，则应该从键盘给n输入的值是(      )</p>
+                  <button>A：1</button>
+                  <button>B：2</button>
+                  <button>C：3</button>
+                  <button>D：4</button>
+                  <span>3/5</span>
+                </section>
+                <section>
+                  <h1 class="ft20 text-center">在线测试</h1>
+                  <p>有以下程序段: int s=0,a=1,n; scanf("%d",&n);do {  s+=1;a=a-2; }  while(a!=n);printf("%d\n",s);若要使程序的输出值为2，则应该从键盘给n输入的值是(      )</p>
+                  <button>A：1</button>
+                  <button>B：2</button>
+                  <button>C：3</button>
+                  <button>D：4</button>
+                  <span>4/5</span>
+                </section>
+                <section>
+                  <h1 class="ft20 text-center">在线测试</h1>
+                  <p>有以下程序段: int s=0,a=1,n; scanf("%d",&n);do {  s+=1;a=a-2; }  while(a!=n);printf("%d\n",s);若要使程序的输出值为2，则应该从键盘给n输入的值是(      )</p>
+                  <button>A：1</button>
+                  <button>B：2</button>
+                  <button>C：3</button>
+                  <button>D：4</button>
+                  <span>5/5</span>
+                </section>
+                <section>
+                  <h1 class="ft20 text-center">测试结果</h1>
+                  <ul class="row">
+                    <li class="col-sm-6">答对题数：</li>
+                    <li class="col-sm-6 text-center text-v5"><h2>3</h2></li>
+                  </ul>
+                  <ul class="row">
+                    <li class="col-sm-6">答错题数：</li>
+                    <li class="col-sm-6 text-center text-red"><h2>2</h2></li>
+                  </ul>
+                  <ul class="row">
+                    <li class="col-sm-6">正确率：</li>
+                    <li class="col-sm-6 text-center text-v5"><h2>60%</h2></li>
+                  </ul>
+                  <ul class="row">
+                    <li class="col-sm-6">获得学力：</li>
+                    <li class="col-sm-6 text-center text-v5"><h2>1</h2></li>
+                  </ul>
+                  <input type="button" class="btn btn-micv5 btn-v5-md btn-block closetest" value="结束测试" />
+                </section>
+              </div>             
+            </article>
+          </div>        
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--在线测试提示-->
+  <div class="popover-test hidden" id="popover_test">
+    <span>本章节即将播放结束，赶快自测 一下知识点吧。答对挣学分哦~</span>
+    <a href="" class="start-test">开始测试</a>
+  </div>
 {% endblock content %}
 {% block accessory %}
-  <script src={% static "js/jquery.qrcode.js" %}></script>
-  <script src={% static "js/qrcode.js" %}></script>
-
-  <script>
-  $(function(){
-    $('.scroll-pane').jScrollPane({
-        autoReinitialise: true
-      });
-    $('#code').qrcode({
-      height:120,
-      width:120,
-      text:"{{ lesson_to_play.video_url}}",
-      background:"#f1f1f1",
-      foreground:"#000000",
-    });
-  });
-  </script>
+<script src={% static "js/jquery.cookie.js" %}></script>
+<script src={% static "js/jquery.ui.widget.js" %}></script>
+<script src={% static "js/jquery.iframe-transport.js" %}></script>
+<script src={% static "js/jquery.fileupload.js" %}></script>
+<script src={% static "js/jquery.fileupload-process.js" %}></script>
+<script src={% static "js/jquery.fileupload-validate.js" %}></script>
+<script src={% static "js/jquery.qrcode.js" %}></script>
+<script src={% static "js/qrcode.js" %}></script>
+<script src={% static "js/csrf.js" %}></script>
+<script src={% static "js/course_play.js" %}></script>
 {% endblock accessory %}

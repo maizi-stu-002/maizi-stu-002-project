@@ -6,7 +6,20 @@ from course_views import *
 
 urlpatterns = [
 	# url(r'course/(?P<pageId>\d{1,2})?/?$'
-	url(r'^course/$',CourseListView.as_view(),name="course_list"),
+	url(r'^course/', include([
+		url(r'^$', CourseListView.as_view(),name="course_list"),
+		url(r'^add/comment/$', AddCommentView.as_view(), name="addComment"),
+		])
+	),
+	url(r'^lesson/', include([
+		url(r'^(?P<lid>\d+)/', include([
+			url(r'^$', LessonRedirectView.as_view(), name="lesson"),
+			url(r'^comment/$', get_comments_view, name="lessonComment"),
+			])
+		),
+		url(r'^student/job/upload/$', UploadView.as_view(), name="upload"),
+		])
+	),
 	url(r'^course/',
 		include([
 			url(r'^(?P<name>[\w-]+)/',
